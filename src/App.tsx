@@ -125,12 +125,12 @@ export default function App() {
       showToast(`Payment required: Unlock ${unit.unitCodeTag} for ₹${unit.priceINR || 49} to download.`);
       const matchedCatalogProduct: CatalogProduct = {
         id: unit.id,
-        serialNumber: unit.unitNumber,
+        serialNumber: typeof unit.unitNumber === 'number' ? unit.unitNumber : parseInt(String(unit.unitNumber), 10) || 1,
         title: `${unit.unitCodeTag}: ${unit.title}`,
         subject: unit.category,
         category: unit.category,
         description: unit.description,
-        pageCount: unit.pageCount || 88,
+        pageCount: (unit as any).pageCount || 88,
         originalPriceINR: 149,
         discountPriceINR: 100,
         finalPriceINR: unit.priceINR || 49,

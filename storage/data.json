@@ -31,7 +31,7 @@
       "finalPriceINR": 99,
       "storageKey": "civil_engineering_complete_notes.pdf",
       "coverGradient": "from-blue-600 via-indigo-700 to-slate-900",
-      "fileSizeBytes": 6291456,
+      "fileSizeBytes": 17584,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -49,7 +49,7 @@
       "finalPriceINR": 149,
       "storageKey": "surveying_notes.pdf",
       "coverGradient": "from-emerald-600 via-teal-700 to-slate-900",
-      "fileSizeBytes": 3565158.4000000004,
+      "fileSizeBytes": 17772,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -67,7 +67,7 @@
       "finalPriceINR": 79,
       "storageKey": "building_materials.pdf",
       "coverGradient": "from-amber-600 via-orange-700 to-slate-900",
-      "fileSizeBytes": 2936012.8,
+      "fileSizeBytes": 17560,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -85,7 +85,7 @@
       "finalPriceINR": 129,
       "storageKey": "estimation_and_costing.pdf",
       "coverGradient": "from-rose-600 via-pink-700 to-slate-900",
-      "fileSizeBytes": 3774873.5999999996,
+      "fileSizeBytes": 17590,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -103,7 +103,7 @@
       "finalPriceINR": 199,
       "storageKey": "construction_planning.pdf",
       "coverGradient": "from-purple-600 via-indigo-800 to-slate-900",
-      "fileSizeBytes": 4508876.8,
+      "fileSizeBytes": 17560,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -121,7 +121,7 @@
       "finalPriceINR": 49,
       "storageKey": "btec_unit_1_mechanics.pdf",
       "coverGradient": "from-emerald-700 via-teal-800 to-slate-900",
-      "fileSizeBytes": 2181038.08,
+      "fileSizeBytes": 17614,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -139,7 +139,7 @@
       "finalPriceINR": 49,
       "storageKey": "btec_unit_30_geotechnics.pdf",
       "coverGradient": "from-cyan-700 via-blue-800 to-slate-900",
-      "fileSizeBytes": 2453667.84,
+      "fileSizeBytes": 17578,
       "isPublished": true,
       "createdAt": "2026-10-27T09:20:02.826Z",
       "updatedAt": "2026-10-27T09:20:02.826Z"
@@ -184,6 +184,16 @@
       "status": "revoked",
       "grantedAt": "2026-10-27T10:14:29.565Z",
       "revokedAt": "2026-10-27T10:14:29.565Z"
+    },
+    {
+      "id": "ent_1793104462796_wbqxo",
+      "userId": "usr_student_001",
+      "userEmail": "student@civilnotes.com",
+      "productId": "prod_surveying_notes",
+      "orderId": "test_ord_lifecycle_1793104462796",
+      "status": "revoked",
+      "grantedAt": "2026-10-27T12:34:22.796Z",
+      "revokedAt": "2026-10-27T12:34:22.797Z"
     }
   ],
   "webhookLogs": [
@@ -191,6 +201,11 @@
       "eventId": "evt_sec_test_1793096069564",
       "eventType": "payment.captured",
       "processedAt": "2026-10-27T10:14:29.564Z"
+    },
+    {
+      "eventId": "evt_sec_test_1793104462795",
+      "eventType": "payment.captured",
+      "processedAt": "2026-10-27T12:34:22.796Z"
     }
   ],
   "auditLogs": [

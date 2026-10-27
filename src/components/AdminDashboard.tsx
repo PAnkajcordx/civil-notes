@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   ShieldAlert,
   Upload,
@@ -17,6 +17,9 @@ import {
   X,
   Play,
   RotateCcw,
+  Sparkles,
+  Eye,
+  FileCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { CatalogProduct } from './PDFPaymentTable';
@@ -30,7 +33,7 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
 
-  // New product form modal state
+  // New/Edit product form modal state
   const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [newTitle, setNewTitle] = useState('');
@@ -41,6 +44,10 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
   const [newOriginalPrice, setNewOriginalPrice] = useState('249');
   const [newDiscountPrice, setNewDiscountPrice] = useState('150');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  // Quick Replace PDF state
+  const [replacingProductId, setReplacingProductId] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Security test results state
   const [securityReport, setSecurityReport] = useState<any | null>(null);
@@ -81,54 +88,46 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
     setTimeout(() => setActionMessage(null), 4000);
   };
 
-  // Handle Save / Add Product
+  // Handle Save / Add / Edit Product (supports uploading/replacing the real PDF file)
   const handleSaveProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) return;
 
     try {
-      const orig = Number(newOriginalPrice) || 99;
-      const disc = Number(newDiscountPrice) || 0;
+      const formData = new FormData();
+      formData.append('title', newTitle);
+      formData.append('subject', newSubject);
+      formData.append('category', newCategory);
+      formData.append('description', newDescription);
+      formData.append('pageCount', newPageCount);
+      formData.append('originalPriceINR', newOriginalPrice);
+      formData.append('discountPriceINR', newDiscountPrice);
+      if (selectedFile) {
+        formData.append('pdfFile', selectedFile);
+      }
 
       if (editingProduct) {
-        // Edit existing
+        // Edit existing product and optionally replace real PDF
         const res = await fetch(`/api/admin/products/${editingProduct.id}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            title: newTitle,
-            subject: newSubject,
-            category: newCategory,
-            description: newDescription,
-            pageCount: Number(newPageCount) || 50,
-            originalPriceINR: orig,
-            discountPriceINR: disc,
-          }),
+          body: formData,
         });
 
         if (res.ok) {
-          showNotice(`Updated product: ${newTitle}`);
+          showNotice(`Updated product & PDF details for: ${newTitle}`);
           setIsAddModalOpen(false);
           setEditingProduct(null);
+          setSelectedFile(null);
           fetchDashboardData();
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Failed to update product.');
         }
       } else {
-        // Upload new product with Multer FormData
-        const formData = new FormData();
-        formData.append('title', newTitle);
-        formData.append('subject', newSubject);
-        formData.append('category', newCategory);
-        formData.append('description', newDescription);
-        formData.append('pageCount', newPageCount);
-        formData.append('originalPriceINR', newOriginalPrice);
-        formData.append('discountPriceINR', newDiscountPrice);
-        if (selectedFile) {
-          formData.append('pdfFile', selectedFile);
-        }
-
+        // Upload new product with PDF
         const res = await fetch('/api/admin/products', {
           method: 'POST',
           headers: {
@@ -138,14 +137,80 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
         });
 
         if (res.ok) {
-          showNotice(`Successfully uploaded & added ${newTitle} to catalog!`);
+          showNotice(`Successfully uploaded & published real PDF: ${newTitle}!`);
           setIsAddModalOpen(false);
           setSelectedFile(null);
           fetchDashboardData();
+        } else {
+          const data = await res.json();
+          alert(data.error || 'Failed to create product.');
         }
       }
     } catch (err: any) {
       alert('Error saving product: ' + err.message);
+    }
+  };
+
+  // Quick Replace PDF handler
+  const handleTriggerFileSelect = (prodId: string) => {
+    setReplacingProductId(prodId);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !replacingProductId || !token) return;
+
+    try {
+      const formData = new FormData();
+      formData.append('pdfFile', file);
+
+      showNotice(`Uploading real PDF file (${(file.size / 1024).toFixed(1)} KB)...`);
+      const res = await fetch(`/api/admin/products/${replacingProductId}/replace-pdf`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        showNotice(data.message || 'Real PDF file successfully replaced!');
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Failed to replace PDF.');
+      }
+    } catch (err: any) {
+      alert('Upload error: ' + err.message);
+    } finally {
+      setReplacingProductId(null);
+    }
+  };
+
+  // Regenerate Real High-Fidelity Technical PDF
+  const handleRegeneratePdf = async (prodId: string, title: string) => {
+    if (!token) return;
+    try {
+      showNotice(`Regenerating authentic civil engineering PDF for ${title}...`);
+      const res = await fetch(`/api/admin/products/${prodId}/regenerate-pdf`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showNotice(data.message || `Regenerated real PDF for ${title}!`);
+        fetchDashboardData();
+      } else {
+        alert(data.error || 'Failed to regenerate PDF.');
+      }
+    } catch (err: any) {
+      alert('Regeneration error: ' + err.message);
     }
   };
 
@@ -203,6 +268,15 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/85 backdrop-blur-md animate-in fade-in duration-200">
+      {/* Hidden file input for quick PDF replace */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".pdf"
+        className="hidden"
+        onChange={handleFileUpload}
+      />
+
       <div className="relative w-full max-w-5xl h-[92vh] flex flex-col rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl overflow-hidden text-white">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3.5 bg-slate-900/95 border-b border-slate-800 shrink-0">
@@ -218,7 +292,7 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                 </span>
               </div>
               <p className="text-[10px] text-slate-400">
-                Manage PDF Inventory, Dynamic Prices, Razorpay Transactions &amp; Security
+                Upload &amp; Change Real PDFs, Manage Prices, Inspect Razorpay Orders &amp; Test Security
               </p>
             </div>
           </div>
@@ -259,7 +333,7 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                   : 'bg-slate-800/80 text-slate-300 hover:bg-slate-800'
               }`}
             >
-              PDF Inventory ({products.length})
+              Real PDF Inventory ({products.length})
             </button>
             <button
               onClick={() => setActiveTab('orders')}
@@ -301,14 +375,14 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
         {/* Tab Content Viewport */}
         <div className="flex-1 overflow-y-auto p-5">
-          {/* TAB 1: PRODUCT MANAGEMENT */}
+          {/* TAB 1: PRODUCT MANAGEMENT & REAL PDF REPLACEMENT */}
           {activeTab === 'products' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white">Configurable PDF Catalog &amp; Pricing</h4>
+                  <h4 className="text-sm font-bold text-white">Real PDF Documents &amp; Pricing Management</h4>
                   <p className="text-xs text-slate-400">
-                    Configure titles, categories, page counts, original prices, and student discounts.
+                    Upload your real PDF files, replace existing files on disk, or regenerate high-fidelity civil engineering packs.
                   </p>
                 </div>
                 <button
@@ -320,12 +394,13 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                     setNewOriginalPrice('299');
                     setNewDiscountPrice('200');
                     setNewPageCount('120');
+                    setSelectedFile(null);
                     setIsAddModalOpen(true);
                   }}
                   className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition-all flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
-                  <span>Upload &amp; Add New PDF</span>
+                  <span>Upload &amp; Add New Real PDF</span>
                 </button>
               </div>
 
@@ -336,12 +411,12 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                     <tr className="bg-slate-900/90 text-slate-400 text-[10px] uppercase font-bold border-b border-slate-800">
                       <th className="py-2.5 px-3">#</th>
                       <th className="py-2.5 px-3">Product Title &amp; Subject</th>
-                      <th className="py-2.5 px-3">Category</th>
+                      <th className="py-2.5 px-3">PDF File on Storage</th>
                       <th className="py-2.5 px-3 text-center">Pages</th>
                       <th className="py-2.5 px-3 text-right">Original</th>
                       <th className="py-2.5 px-3 text-right">Discount</th>
                       <th className="py-2.5 px-3 text-right text-emerald-400">Final Price</th>
-                      <th className="py-2.5 px-3 text-center">Actions</th>
+                      <th className="py-2.5 px-3 text-center">Manage Real PDF</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-800/60">
@@ -354,7 +429,15 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                           <div className="font-bold text-white">{p.title}</div>
                           <div className="text-[11px] text-emerald-400">{p.subject}</div>
                         </td>
-                        <td className="py-3 px-3 text-slate-300">{p.category}</td>
+                        <td className="py-3 px-3">
+                          <div className="font-mono text-[11px] text-slate-300 flex items-center gap-1">
+                            <FileCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                            <span className="truncate max-w-[140px]">{p.storageKey}</span>
+                          </div>
+                          <div className="text-[10px] text-slate-500 font-mono">
+                            {(p.fileSizeBytes / 1024).toFixed(1)} KB
+                          </div>
+                        </td>
                         <td className="py-3 px-3 text-center font-mono text-slate-400">
                           {p.pageCount}
                         </td>
@@ -368,7 +451,28 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                           ₹{p.finalPriceINR}
                         </td>
                         <td className="py-3 px-3 text-center">
-                          <div className="flex items-center justify-center gap-1.5">
+                          <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                            {/* Quick Replace PDF Button */}
+                            <button
+                              onClick={() => handleTriggerFileSelect(p.id)}
+                              className="px-2 py-1 rounded-lg bg-emerald-950/70 hover:bg-emerald-900 text-emerald-300 text-[10px] font-bold border border-emerald-700/50 transition-colors flex items-center gap-1 cursor-pointer"
+                              title="Replace with your own uploaded .pdf file"
+                            >
+                              <Upload className="w-3 h-3" />
+                              <span>Replace PDF</span>
+                            </button>
+
+                            {/* Regenerate Real Technical PDF */}
+                            <button
+                              onClick={() => handleRegeneratePdf(p.id, p.title)}
+                              className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-semibold transition-colors flex items-center gap-1 cursor-pointer"
+                              title="Regenerate authentic Eurocode calculations & tables"
+                            >
+                              <Sparkles className="w-3 h-3 text-emerald-400" />
+                              <span>Regenerate</span>
+                            </button>
+
+                            {/* Edit Details */}
                             <button
                               onClick={() => {
                                 setEditingProduct(p);
@@ -379,13 +483,16 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                                 setNewPageCount(String(p.pageCount));
                                 setNewOriginalPrice(String(p.originalPriceINR));
                                 setNewDiscountPrice(String(p.discountPriceINR));
+                                setSelectedFile(null);
                                 setIsAddModalOpen(true);
                               }}
                               className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors cursor-pointer"
-                              title="Edit Details & Pricing"
+                              title="Edit Details, Pricing & PDF"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
+
+                            {/* Delete */}
                             <button
                               onClick={() => handleDeleteProduct(p.id, p.title)}
                               className="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-300 hover:text-white transition-colors cursor-pointer"
@@ -516,7 +623,6 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                 </button>
               </div>
 
-              {/* Security Test Results List */}
               {securityReport ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between px-1 text-xs">
@@ -580,13 +686,14 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
           )}
         </div>
 
-        {/* Modal for adding/editing product */}
+        {/* Modal for adding/editing product and replacing PDF */}
         {isAddModalOpen && (
           <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md">
-            <div className="relative w-full max-w-lg rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl p-5 text-white">
+            <div className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl p-5 text-white">
               <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h4 className="text-sm font-bold text-white">
-                  {editingProduct ? 'Edit PDF Product & Pricing' : 'Upload & Add New Coursework PDF'}
+                <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-emerald-400" />
+                  <span>{editingProduct ? 'Edit Product & Change Real PDF' : 'Upload & Add New Real Coursework PDF'}</span>
                 </h4>
                 <button
                   onClick={() => setIsAddModalOpen(false)}
@@ -689,7 +796,6 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                   </div>
                 </div>
 
-                {/* Final calculated price notice */}
                 <div className="p-2.5 rounded-xl bg-slate-950 border border-slate-800 flex justify-between text-xs font-mono">
                   <span className="text-slate-400">Final Student Payable Price:</span>
                   <strong className="text-emerald-400 font-bold">
@@ -697,19 +803,28 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                   </strong>
                 </div>
 
-                {!editingProduct && (
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-400 block mb-1">
-                      Upload PDF File (Stored in Private Storage)
-                    </label>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={e => setSelectedFile(e.target.files?.[0] || null)}
-                      className="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white"
-                    />
-                  </div>
-                )}
+                {/* File Uploader for creating or changing real PDF */}
+                <div className="p-3 bg-slate-950/70 rounded-2xl border border-slate-800 space-y-1.5">
+                  <label className="text-[11px] font-bold text-slate-300 flex items-center justify-between">
+                    <span>{editingProduct ? 'Change Real PDF File (Optional)' : 'Upload Real PDF File (.pdf)'}</span>
+                    {editingProduct && (
+                      <span className="text-[10px] text-slate-500 font-mono">Current: {editingProduct.storageKey}</span>
+                    )}
+                  </label>
+                  <input
+                    type="file"
+                    accept=".pdf"
+                    onChange={e => setSelectedFile(e.target.files?.[0] || null)}
+                    className="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2.5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white cursor-pointer"
+                  />
+                  <p className="text-[10px] text-slate-400">
+                    {selectedFile
+                      ? `Selected replacement: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`
+                      : editingProduct
+                      ? 'Leave empty to keep the existing PDF, or choose a new .pdf file to overwrite it.'
+                      : 'If no file is selected, an authentic technical civil engineering PDF will be generated automatically.'}
+                  </p>
+                </div>
 
                 <div className="pt-2 flex gap-2">
                   <button
@@ -723,7 +838,7 @@ export const AdminDashboard: React.FC<{ onClose: () => void }> = ({ onClose }) =
                     type="submit"
                     className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold"
                   >
-                    {editingProduct ? 'Save Changes' : 'Upload & Publish'}
+                    {editingProduct ? 'Save & Update Real PDF' : 'Upload & Publish Real PDF'}
                   </button>
                 </div>
               </form>

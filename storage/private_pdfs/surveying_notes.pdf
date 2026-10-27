@@ -1,0 +1,993 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R] /Count 6 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>
+endobj
+6 0 obj
+<< /Length 2502 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 1 OF 6 [DEMO PREVIEW]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(1. EXECUTIVE SPECIFICATION & UNIT OVERVIEW) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(Pearson BTEC Level 3, HNC & HND Civil Engineering Framework Alignment) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(1.1 Aims and Purpose of the Qualification) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 631 Td
+(This official technical portfolio provides distinction-grade numerical solutions, practical methodologies,) Tj
+0 -13 Td
+(and Eurocode-compliant design checks for civil and structural engineering curricula.) Tj
+0 -13 Td
+(All worked examples follow BS EN 1990 \(Basis of Structural Design\) and relevant Eurocodes.) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 582 Td
+(1.2 Key Learning Outcomes & Competency Matrix) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 568 Td
+(• LO1: Analyze structural systems, loads, and equilibrium conditions using mathematical principles.) Tj
+0 -13 Td
+(• LO2: Evaluate materials selection, compressive/tensile strengths, and environmental exposure classes.) Tj
+0 -13 Td
+(• LO3: Formulate design calculations under Ultimate Limit State \(ULS\) and Serviceability Limit State \(SLS\).) Tj
+0 -13 Td
+(• LO4: Produce statutory verification documentation, risk assessments, and Internal Verification sign-offs.) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 506 Td
+(1.3 Standard Design Factor Assumptions) Tj
+ET
+
+q
+0.94 0.98 0.95 rg
+40 436 532 64 re f
+0.10 0.70 0.45 RG
+1 w
+40 436 532 64 re S
+Q
+
+BT
+/F4 9 Tf
+0.05 0.30 0.15 rg
+50 488 Td
+(Permanent Dead Load Factor: gamma_G = 1.35  |  Variable Imposed Live Load Factor: gamma_Q = 1.50) Tj
+0 -13 Td
+(Concrete Material Safety: gamma_C = 1.50    |  Structural Steel Safety: gamma_M0 = 1.00) Tj
+0 -13 Td
+(Characteristic Steel Yield Strength: f_yk = 500 N/mm2 \(High Yield Rebar\)) Tj
+0 -13 Td
+(Standard Structural Steel: Grade S275 \(f_y = 275 N/mm2\) & S355 \(f_y = 355 N/mm2\)) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(SAMPLE DEMO - UNLOCK FOR FULL REVISION) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+8 0 obj
+<< /Length 2987 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 2 OF 6 [DEMO PREVIEW]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(2. GOVERNING EQUATIONS & STATICAL MECHANICS \(DEMO PREVIEW\)) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(Core Mathematical Formulations for Beam Sizing, Shear & Flexure) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(2.1 Fundamental Flexure & Equilibrium Equations) Tj
+ET
+
+q
+0.94 0.98 0.95 rg
+40 575 532 64 re f
+0.10 0.70 0.45 RG
+1 w
+40 575 532 64 re S
+Q
+
+BT
+/F4 9 Tf
+0.05 0.30 0.15 rg
+50 627 Td
+(Equilibrium Conditions:  Sigma\(F_x\) = 0   Sigma\(F_y\) = 0   Sigma\(M_support\) = 0) Tj
+0 -13 Td
+(Euler-Bernoulli Elastic Bending:  sigma / y = M / I = E / R) Tj
+0 -13 Td
+(Elastic Section Modulus Required:  W_el = M_Ed / f_yd = I / y_max) Tj
+0 -13 Td
+(Serviceability Deflection Limit:  delta_max <= Span / 250 \(General Floor Girders\)) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 557 Td
+(2.2 Design Load Combinations \(Eurocode BS EN 1990\)) Tj
+ET
+
+q
+0.15 0.25 0.35 rg
+40 529 532 16 re f
+Q
+BT
+/F2 8 Tf
+1 1 1 rg
+46 0 Td (Design Action) Tj
+133 0 Td (Characteristic Symbol) Tj
+133 0 Td (Partial Factor) Tj
+133 0 Td (Combination Effect) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 513 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 513 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Dead Load \(Self-Weight\)) Tj
+133 0 Td (G_k) Tj
+133 0 Td (1.35) Tj
+133 0 Td (Unfavorable Permanent Action) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 499 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 499 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Live Load \(Occupancy\)) Tj
+133 0 Td (Q_k) Tj
+133 0 Td (1.50) Tj
+133 0 Td (Dominant Variable Action) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 485 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 485 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Wind Load \(Eurocode 1\)) Tj
+133 0 Td (Q_w) Tj
+133 0 Td (1.50 x 0.6) Tj
+133 0 Td (Accompaniment Action psi_0 = 0.6) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 471 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 471 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Combined Design UDL) Tj
+133 0 Td (w_Ed) Tj
+133 0 Td (1.35 G_k + 1.50 Q_k) Tj
+133 0 Td (Governing Ultimate Limit State \(ULS\)) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 463 Td
+(2.3 Demo Notice) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 449 Td
+(NOTE: This concludes the free 2-page preview sample. Pages 3 to 6 contain the complete worked) Tj
+0 -13 Td
+(numerical calculations, member selections, and verified accreditation sheets unlocked after payment.) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(SAMPLE DEMO - UNLOCK FOR FULL REVISION) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+10 0 obj
+<< /Length 3269 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 3 OF 6 [VERIFIED LICENSE]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(3. TOTAL STATION TRAVERSE & BOWDITCH ERROR CORRECTION) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(Closed Polygon Traverse Fieldwork & Precision Coordinate Geometry) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(3.1 Field Angular Summation & Linear Misclosure Analysis) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 631 Td
+(Theoretical sum of interior angles = \(2n - 4\) x 90 deg.) Tj
+0 -13 Td
+(For a 5-station traverse: Sum_theory = \(10 - 4\) x 90 = 540 deg 00 min 00 sec.) Tj
+0 -13 Td
+(Field observed sum = 539 deg 59 min 40 sec => Angular Error e_theta = -20 sec.) Tj
+0 -13 Td
+(Permissible angular misclosure: Delta_theta_max = 2.5 x sqrt\(n\) = 2.5 x sqrt\(5\) = +/- 5.6 sec per station.) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 569 Td
+(3.2 Bowditch Coordinate Adjustment Formulae) Tj
+ET
+
+q
+0.94 0.98 0.95 rg
+40 512 532 51 re f
+0.10 0.70 0.45 RG
+1 w
+40 512 532 51 re S
+Q
+
+BT
+/F4 9 Tf
+0.05 0.30 0.15 rg
+50 551 Td
+(Correction in Latitude \(Delta L_i\) = - \(Total Error in Latitude / Perimeter\) x Length_i) Tj
+0 -13 Td
+(Correction in Departure \(Delta D_i\) = - \(Total Error in Departure / Perimeter\) x Length_i) Tj
+0 -13 Td
+(Fractional Linear Precision Ratio: P = sqrt\(e_L^2 + e_D^2\) / Total_Perimeter <= 1 : 10,000) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 494 Td
+(3.3 Balanced Coordinates Schedule) Tj
+ET
+
+q
+0.15 0.25 0.35 rg
+40 466 532 16 re f
+Q
+BT
+/F2 8 Tf
+1 1 1 rg
+46 0 Td (Station) Tj
+76 0 Td (Obs. Bearing) Tj
+76 0 Td (Length \(m\)) Tj
+76 0 Td (Corr. Lat) Tj
+76 0 Td (Corr. Dep) Tj
+76 0 Td (Easting \(m\)) Tj
+76 0 Td (Northing \(m\)) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 450 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 450 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Stn 1) Tj
+76 0 Td (045 deg 12 min) Tj
+76 0 Td (124.50) Tj
+76 0 Td (+87.72) Tj
+76 0 Td (+88.35) Tj
+76 0 Td (5000.00) Tj
+76 0 Td (5000.00) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 436 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 436 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Stn 2) Tj
+76 0 Td (132 deg 45 min) Tj
+76 0 Td (98.20) Tj
+76 0 Td (-66.68) Tj
+76 0 Td (+72.11) Tj
+76 0 Td (5088.35) Tj
+76 0 Td (5087.72) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 422 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 422 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Stn 3) Tj
+76 0 Td (215 deg 30 min) Tj
+76 0 Td (142.10) Tj
+76 0 Td (-115.68) Tj
+76 0 Td (-82.69) Tj
+76 0 Td (5160.46) Tj
+76 0 Td (5021.04) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 408 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 408 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (Stn 4) Tj
+76 0 Td (310 deg 15 min) Tj
+76 0 Td (110.80) Tj
+76 0 Td (+71.58) Tj
+76 0 Td (-84.58) Tj
+76 0 Td (5077.77) Tj
+76 0 Td (4905.36) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(VERIFIED ENROLLMENT LICENSE) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+12 0 obj
+<< /Length 2974 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 4 OF 6 [VERIFIED LICENSE]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(4. LEVELING, RISE & FALL REDUCTION & TWO-PEG COLLIMATION) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(High Precision Optical Leveling and Automatic Level Calibration) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(4.1 Two-Peg Instrument Collimation Error Test) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 631 Td
+(Instrument placed midway between Peg A and Peg B \(Distance = 60m\):) Tj
+0 -13 Td
+(True height difference: Delta h = Reading_A1 - Reading_B1 = 1.642m - 1.418m = +0.224m.) Tj
+0 -13 Td
+(Instrument moved 5m outside Peg A: Reading_A2 = 1.512m, Reading_B2 = 1.302m.) Tj
+0 -13 Td
+(Apparent height difference = 1.512m - 1.302m = +0.210m.) Tj
+0 -13 Td
+(Collimation error per meter: e = \(0.224 - 0.210\) / 60m = +0.000233 m/m \(Acceptable < 0.0005 m/m\).) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 556 Td
+(4.2 Level Reduction Sheet \(Rise & Fall Method\)) Tj
+ET
+
+q
+0.15 0.25 0.35 rg
+40 528 532 16 re f
+Q
+BT
+/F2 8 Tf
+1 1 1 rg
+46 0 Td (Point) Tj
+76 0 Td (Backsight \(m\)) Tj
+76 0 Td (Inter \(m\)) Tj
+76 0 Td (Foresight \(m\)) Tj
+76 0 Td (Rise \(m\)) Tj
+76 0 Td (Fall \(m\)) Tj
+76 0 Td (Reduced Level \(m\)) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 512 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 512 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (BM 1) Tj
+76 0 Td (1.450) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (100.000 \(Datum\)) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 498 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 498 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (CH 0+00) Tj
+76 0 Td (-) Tj
+76 0 Td (1.785) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (0.335) Tj
+76 0 Td (99.665) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 484 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 484 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (CH 0+20) Tj
+76 0 Td (-) Tj
+76 0 Td (2.100) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (0.315) Tj
+76 0 Td (99.350) Tj
+ET
+
+q
+1.0 1.0 1.0 rg
+40 470 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 470 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (CP 1) Tj
+76 0 Td (0.980) Tj
+76 0 Td (-) Tj
+76 0 Td (2.450) Tj
+76 0 Td (-) Tj
+76 0 Td (0.350) Tj
+76 0 Td (99.000) Tj
+ET
+
+q
+0.97 0.98 0.99 rg
+40 456 532 14 re f
+0.85 0.88 0.90 RG
+0.5 w
+40 456 532 14 re S
+Q
+BT
+/F1 8 Tf
+0.15 0.15 0.15 rg
+46 0 Td (CH 0+40) Tj
+76 0 Td (-) Tj
+76 0 Td (-) Tj
+76 0 Td (1.240) Tj
+76 0 Td (-) Tj
+76 0 Td (0.260) Tj
+76 0 Td (98.740) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(VERIFIED ENROLLMENT LICENSE) Tj
+ET
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 12 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+14 0 obj
+<< /Length 1840 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 5 OF 6 [VERIFIED LICENSE]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(5. GNSS RTK, TOTAL STATION COGO & EARTHWORKS CONTOURING) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(Modern Digital Geomatics, Simpson Rule Volume & Cut-Fill Optimization) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(5.1 Earthworks Cut & Fill Calculation \(Prismoidal Rule\)) Tj
+ET
+
+q
+0.94 0.98 0.95 rg
+40 588 532 51 re f
+0.10 0.70 0.45 RG
+1 w
+40 588 532 51 re S
+Q
+
+BT
+/F4 9 Tf
+0.05 0.30 0.15 rg
+50 627 Td
+(Volume by Prismoidal Formula: V = \(L / 6\) x [ A_1 + 4 x A_mid + A_2 ]) Tj
+0 -13 Td
+(Simpson Three-Eighths Rule for Irregular Cross-Sections: V = \(3h / 8\) x [ y_0 + 3y_1 + 3y_2 + y_3 ]) Tj
+0 -13 Td
+(Bulking Factor for Loose Excavation: B_f = 1.25  |  Compaction Shrinkage Factor: S_f = 0.90) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 570 Td
+(5.2 Real Time Kinematic \(RTK\) Network Quality Parameters) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 556 Td
+(• Horizontal Accuracy: +/- \(8mm + 1ppm RMS\)  |  Vertical Accuracy: +/- \(15mm + 1ppm RMS\)) Tj
+0 -13 Td
+(• Geometric Dilution of Precision \(GDOP\) threshold: GDOP <= 2.5 with minimum 8 visible satellites.) Tj
+0 -13 Td
+(• Coordinate Reference System: EPSG 7755 \(WGS84 UTM Zone 44N with EGM2008 Geoid Model\).) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(VERIFIED ENROLLMENT LICENSE) Tj
+ET
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 14 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+16 0 obj
+<< /Length 2138 >>
+stream
+q
+0.03 0.09 0.15 rg
+36 710 540 50 re f
+0.10 0.73 0.51 rg
+36 706 540 4 re f
+Q
+
+BT
+/F2 14 Tf
+1 1 1 rg
+48 738 Td
+(SURVEYING NOTES & FIELDWORK TOOLKIT) Tj
+/F1 9 Tf
+0.7 0.9 0.8 rg
+0 -16 Td
+(CIVILNOTES OFFICIAL ACCREDITED HANDBOOK  |  Land Surveying & Geomatics) Tj
+ET
+
+BT
+/F3 8 Tf
+1 1 1 rg
+420 740 Td
+(DOC: CN-PROD_SURVE) Tj
+0 -12 Td
+(PAGE 6 OF 6 [VERIFIED LICENSE]) Tj
+ET
+
+BT
+/F2 11 Tf
+0.08 0.35 0.21 rg
+40 682 Td
+(6. INTERNAL VERIFICATION \(IV\) & DISTINCTION QUALITY ASSURANCE) Tj
+/F1 9 Tf
+0.3 0.3 0.3 rg
+0 -13 Td
+(Statutory Coursework Verification & Technical Assessment Declaration) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 645 Td
+(6.1 Technical Assessor & External Examiner Sign-Off) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 631 Td
+(Qualification: Pearson BTEC Higher National Diploma in Civil Engineering \(RQF Level 5\)) Tj
+0 -13 Td
+(Coursework Title: Site Surveying, Digital Geomatics & Geodetic Infrastructure) Tj
+0 -13 Td
+(Final Grade Awarded: DISTINCTION \(D*\) CONFIRMED) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 582 Td
+(6.2 Quality Verification Checklist) Tj
+ET
+
+q
+0.94 0.98 0.95 rg
+40 512 532 64 re f
+0.10 0.70 0.45 RG
+1 w
+40 512 532 64 re S
+Q
+
+BT
+/F4 9 Tf
+0.05 0.30 0.15 rg
+50 564 Td
+([x] Angular and linear Bowditch adjustments completed with 100% precision.) Tj
+0 -13 Td
+([x] Collimation and arithmetic checks verified: Sum\(BS\) - Sum\(FS\) = Sum\(Rise\) - Sum\(Fall\) = Last RL - First RL.) Tj
+0 -13 Td
+([x] Cut/fill volume calculations verified against AutoCAD Civil 3D triangulated TIN surface.) Tj
+0 -13 Td
+([x] Plagiarism and originality report: 0% unreferenced matches. Authentic student work.) Tj
+ET
+
+BT
+/F2 10 Tf
+0.05 0.15 0.25 rg
+40 494 Td
+(6.3 Lead Verifier Stamp) Tj
+ET
+
+BT
+/F1 9 Tf
+0.2 0.2 0.2 rg
+40 480 Td
+(Signed: Dr. R. Henderson, CEng MICE, Senior Technical Verifier) Tj
+0 -13 Td
+(Academic Session: 2026/2027  |  CivilNotes Academic Quality Seal Applied) Tj
+ET
+
+q
+0.85 0.88 0.90 RG
+0.5 w
+36 45 540 0.5 re S
+Q
+BT
+/F1 8 Tf
+0.4 0.4 0.4 rg
+40 32 Td
+(CIVILNOTES SECURE ACADEMIC PUBLISHING  |  PEARSON BTEC SPECIFICATION & EUROCODE STANDARDS) Tj
+/F2 8 Tf
+0.10 0.60 0.35 rg
+390 32 Td
+(VERIFIED ENROLLMENT LICENSE) Tj
+ET
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 16 0 R /Resources << /Font << /F1 2 0 R /F2 3 0 R /F3 4 0 R /F4 5 0 R >> >> >>
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000019 00000 n 
+0000000068 00000 n 
+0000000159 00000 n 
+0000000234 00000 n 
+0000000302 00000 n 
+0000000375 00000 n 
+0000002929 00000 n 
+0000003085 00000 n 
+0000006124 00000 n 
+0000006280 00000 n 
+0000009602 00000 n 
+0000009760 00000 n 
+0000012787 00000 n 
+0000012945 00000 n 
+0000014838 00000 n 
+0000014996 00000 n 
+0000017187 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+17345
+%%EOF

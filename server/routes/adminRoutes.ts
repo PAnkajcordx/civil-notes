@@ -20,6 +20,7 @@ import {
 } from '../db';
 import { requireAdmin, AuthRequest } from '../auth';
 import { runSecuritySuite } from '../securityTests';
+import { generateRealCivilEngineeringPdf } from '../seedData';
 
 export const adminRouter = Router();
 
@@ -103,10 +104,17 @@ adminRouter.post('/products', upload.single('pdfFile'), (req: AuthRequest, res: 
 
     const storageKey = file ? file.filename : `custom_notes_${Date.now()}.pdf`;
 
-    // If no file uploaded, generate a blank placeholder PDF in private storage
+    // If no file uploaded, generate real civil engineering PDF in private storage
     if (!file) {
-      const placeholderPath = path.join(PRIVATE_PDF_DIR, storageKey);
-      fs.writeFileSync(placeholderPath, `%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [] /Count 0 >>\nendobj\nxref\n0 3\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \ntrailer\n<< /Size 3 /Root 1 0 R >>\nstartxref\n115\n%%EOF\n`);
+      const realPdfBuf = generateRealCivilEngineeringPdf(
+        String(title).trim(),
+        String(subject).trim(),
+        String(category || 'General Civil Notes').trim(),
+        `prod_${Date.now()}`,
+        Number(pageCount) || 6
+      );
+      const targetPath = path.join(PRIVATE_PDF_DIR, storageKey);
+      fs.writeFileSync(targetPath, realPdfBuf);
     }
 
     const origPrice = Number(originalPriceINR) || 99;
@@ -142,17 +150,30 @@ adminRouter.post('/products', upload.single('pdfFile'), (req: AuthRequest, res: 
   }
 });
 
-// 4. PUT /api/admin/products/:id
-adminRouter.put('/products/:id', (req: AuthRequest, res: Response) => {
+// 4. PUT /api/admin/products/:id (Update product details and optionally replace PDF file)
+adminRouter.put('/products/:id', upload.single('pdfFile'), (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
     const { id } = req.params;
-    const updates = req.body;
+    const updates = { ...req.body };
+    const file = req.file;
 
     const existing = getProductById(id);
     if (!existing) {
       res.status(404).json({ error: 'Product not found.' });
       return;
+    }
+
+    // Convert string numbers if sent via FormData
+    if (updates.originalPriceINR !== undefined) updates.originalPriceINR = Number(updates.originalPriceINR);
+    if (updates.discountPriceINR !== undefined) updates.discountPriceINR = Number(updates.discountPriceINR);
+    if (updates.pageCount !== undefined) updates.pageCount = Number(updates.pageCount);
+    if (updates.serialNumber !== undefined) updates.serialNumber = Number(updates.serialNumber);
+
+    // If replacement PDF uploaded, update storageKey and file size
+    if (file) {
+      updates.storageKey = file.filename;
+      updates.fileSizeBytes = file.size;
     }
 
     const updated = updateProduct(id, updates);
@@ -164,7 +185,95 @@ adminRouter.put('/products/:id', (req: AuthRequest, res: Response) => {
   }
 });
 
-// 5. DELETE /api/admin/products/:id
+// 5. POST /api/admin/products/:id/replace-pdf (Dedicated endpoint to change the real PDF file)
+adminRouter.post('/products/:id/replace-pdf', upload.single('pdfFile'), (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    const { id } = req.params;
+    const file = req.file;
+
+    if (!file) {
+      res.status(400).json({ error: 'Please select a valid PDF file to upload.' });
+      return;
+    }
+
+    const existing = getProductById(id);
+    if (!existing) {
+      res.status(404).json({ error: 'Product not found.' });
+      return;
+    }
+
+    const updated = updateProduct(id, {
+      storageKey: file.filename,
+      fileSizeBytes: file.size,
+    });
+
+    addAuditLog(
+      'PDF_FILE_REPLACED',
+      user.email,
+      `Replaced PDF for product ${existing.title} with new file: ${file.originalname} (${file.size} bytes)`,
+      id
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully replaced real PDF for ${existing.title}!`,
+      product: updated,
+    });
+  } catch (err: any) {
+    console.error('Error replacing PDF:', err);
+    res.status(500).json({ error: 'Failed to replace PDF file.' });
+  }
+});
+
+// 6. POST /api/admin/products/:id/regenerate-pdf (Regenerate rich authentic civil engineering PDF)
+adminRouter.post('/products/:id/regenerate-pdf', (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    const { id } = req.params;
+
+    const existing = getProductById(id);
+    if (!existing) {
+      res.status(404).json({ error: 'Product not found.' });
+      return;
+    }
+
+    const realPdfBuf = generateRealCivilEngineeringPdf(
+      existing.title,
+      existing.subject,
+      existing.category,
+      existing.id,
+      6
+    );
+
+    const storageKey = existing.storageKey || `${existing.id}.pdf`;
+    const targetPath = path.join(PRIVATE_PDF_DIR, storageKey);
+    fs.writeFileSync(targetPath, realPdfBuf);
+
+    const updated = updateProduct(id, {
+      storageKey,
+      fileSizeBytes: realPdfBuf.length,
+    });
+
+    addAuditLog(
+      'PDF_REGENERATED',
+      user.email,
+      `Regenerated high-fidelity real technical PDF for ${existing.title} (${realPdfBuf.length} bytes)`,
+      id
+    );
+
+    res.json({
+      success: true,
+      message: `Successfully regenerated real civil engineering PDF for ${existing.title}!`,
+      product: updated,
+    });
+  } catch (err: any) {
+    console.error('Error regenerating PDF:', err);
+    res.status(500).json({ error: 'Failed to regenerate PDF.' });
+  }
+});
+
+// 7. DELETE /api/admin/products/:id
 adminRouter.delete('/products/:id', (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
@@ -183,7 +292,7 @@ adminRouter.delete('/products/:id', (req: AuthRequest, res: Response) => {
   }
 });
 
-// 6. GET /api/admin/orders
+// 8. GET /api/admin/orders
 adminRouter.get('/orders', (_req: AuthRequest, res: Response) => {
   try {
     const orders = getAllOrders();
@@ -193,7 +302,7 @@ adminRouter.get('/orders', (_req: AuthRequest, res: Response) => {
   }
 });
 
-// 7. POST /api/admin/orders/:id/refund
+// 9. POST /api/admin/orders/:id/refund
 adminRouter.post('/orders/:id/refund', (req: AuthRequest, res: Response) => {
   try {
     const user = req.user!;
@@ -218,7 +327,7 @@ adminRouter.post('/orders/:id/refund', (req: AuthRequest, res: Response) => {
   }
 });
 
-// 8. GET /api/admin/audit-logs
+// 10. GET /api/admin/audit-logs
 adminRouter.get('/audit-logs', (_req: AuthRequest, res: Response) => {
   try {
     const logs = getAuditLogs();
@@ -228,7 +337,7 @@ adminRouter.get('/audit-logs', (_req: AuthRequest, res: Response) => {
   }
 });
 
-// 9. POST /api/admin/run-security-tests
+// 11. POST /api/admin/run-security-tests
 adminRouter.post('/run-security-tests', async (_req: AuthRequest, res: Response) => {
   try {
     const results = await runSecuritySuite();
