@@ -1,7 +1,7 @@
 import React from 'react';
-import { FileText, DollarSign, Bookmark, Sliders, Video, ShoppingBag } from 'lucide-react';
+import { FileText, DollarSign, Bookmark, Sliders, ShoppingBag } from 'lucide-react';
 
-export type TabType = 'notes' | 'pricing' | 'purchases' | 'deck' | 'videos' | 'saved';
+export type TabType = 'notes' | 'pricing' | 'purchases' | 'deck' | 'saved';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -36,14 +36,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     },
     {
       id: 'deck' as TabType,
-      label: 'Deck',
+      label: 'Deck Board',
       icon: Sliders,
-    },
-    {
-      id: 'videos' as TabType,
-      label: 'Videos',
-      icon: Video,
-      subBadge: '₹49',
     },
     {
       id: 'saved' as TabType,
@@ -54,8 +48,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-1 sm:px-3">
-      <div className="max-w-md mx-auto grid grid-cols-6 items-center">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-2 sm:px-4">
+      <div className="max-w-md mx-auto grid grid-cols-5 items-center">
         {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -83,7 +77,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               <span className={`text-[10px] mt-0.5 tracking-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {tab.label}
               </span>
-              {isActive && <span className="w-1 h-1 rounded-full bg-[#185a36] mt-0.5"></span>}
+              {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#185a36] mt-0.5"></span>}
             </button>
           );
         })}

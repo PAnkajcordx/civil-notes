@@ -14,29 +14,21 @@ import {
   Unlock,
   Sparkles,
   Zap,
-  Eye,
-  AlertCircle,
-  FileCheck,
-  Video,
-  Printer
+  AlertCircle
 } from 'lucide-react';
-import { BTECUnit, CivilVideo } from '../types';
+import { BTECUnit } from '../types';
 import { isPdfPaid, downloadUnlockedPDFDocument } from '../utils/pdfPaymentHelper';
-import { isVideoPaid } from '../utils/videoPaymentHelper';
-import { CIVIL_VIDEOS } from '../data/videoData';
 
 interface PDFViewerModalProps {
   unit: BTECUnit | null;
   onClose: () => void;
   onOpenPdfPaywall: (unit: BTECUnit) => void;
-  onOpenVideoPaywall?: (video: CivilVideo) => void;
 }
 
 export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
   unit,
   onClose,
-  onOpenPdfPaywall,
-  onOpenVideoPaywall
+  onOpenPdfPaywall
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
@@ -47,31 +39,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
   const demoPagesCount = unit.demoPagesCount || 2;
   const isPaid = isPdfPaid(unit.id);
   const isPageLocked = !isPaid && currentPage > demoPagesCount;
-
-  // Matching video
-  const matchingVideo = CIVIL_VIDEOS.find(v => 
-    v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
-    v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
-  ) || {
-    id: `vid-unit-${unit.unitNumber}`,
-    title: `${unit.unitCodeTag}: ${unit.title} Distinction Masterclass`,
-    unitCodeTag: unit.unitCodeTag,
-    duration: '45:00 min',
-    quality: '1080p Full HD',
-    fileSize: '390 MB',
-    tutorName: 'CivilNotes Accredited Faculty',
-    description: `Complete numerical walkthrough and coursework step-by-step guidance for ${unit.title}.`,
-    priceINR: 49,
-    thumbnailColor: 'from-blue-700 to-indigo-900',
-    topicsCovered: [
-      `${unit.title} Overview & Learning Outcomes`,
-      'Step-by-step Numerical Problems & Formula Application',
-      'BS EN / Eurocode Specifications Walkthrough',
-      'Distinction Criteria Sign-off Guidance'
-    ]
-  };
-
-  const isVideoUnlocked = isVideoPaid(matchingVideo.id);
 
   const handleDownloadClick = () => {
     if (isPaid) {
@@ -111,7 +78,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
 
           {/* Right: Controls & CTAs */}
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Status indicator badge */}
             {isPaid ? (
               <span className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">
                 <Unlock className="w-3 h-3 text-emerald-400" />
@@ -143,18 +109,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
               </button>
             </div>
 
-            {/* Video companion button */}
-            {onOpenVideoPaywall && (
-              <button
-                onClick={() => onOpenVideoPaywall(matchingVideo)}
-                className="px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold text-amber-200 bg-amber-950/70 hover:bg-amber-900 border border-amber-600/40 transition flex items-center gap-1 cursor-pointer"
-                title="Companion Video Masterclass"
-              >
-                <Video className="w-3.5 h-3.5 text-amber-400" />
-                <span className="hidden lg:inline">{isVideoUnlocked ? 'Video Unlocked' : 'Video (₹49)'}</span>
-              </button>
-            )}
-
             {/* Unlock / Download Button */}
             {isPaid ? (
               <button
@@ -170,7 +124,7 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 className="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#185a36] hover:bg-[#13492c] transition flex items-center gap-1.5 shadow-md cursor-pointer"
               >
                 <Lock className="w-3.5 h-3.5 text-emerald-300" />
-                <span>Unlock PDF (₹49)</span>
+                <span>Unlock PDF (₹{unit.priceINR || 49})</span>
               </button>
             )}
 
@@ -185,9 +139,8 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
           </div>
         </div>
 
-        {/* SECONDARY TOOLBAR: Page Navigator & Thumbnail Strip */}
+        {/* SECONDARY TOOLBAR: Page Navigator */}
         <div className="bg-slate-800/95 px-3 sm:px-5 py-2 border-b border-slate-700 flex items-center justify-between gap-2 text-xs">
-          {/* Previous / Next buttons & Page indicator */}
           <div className="flex items-center gap-1 sm:gap-2">
             <button
               onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
@@ -212,7 +165,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
             </button>
           </div>
 
-          {/* Quick Page Jump Buttons */}
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5">
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(pageNum => {
               const locked = !isPaid && pageNum > demoPagesCount;
@@ -241,14 +193,13 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
             })}
           </div>
 
-          {/* Right: Quick action */}
           {!isPaid && (
             <button
               onClick={() => onOpenPdfPaywall(unit)}
               className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 hover:text-amber-200 cursor-pointer"
             >
               <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>Unlock all 6 pages for ₹49</span>
+              <span>Unlock all pages for ₹{unit.priceINR || 49}</span>
             </button>
           )}
         </div>
@@ -259,19 +210,19 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
               <span>
-                <strong>Free Demo Mode:</strong> Pages 1 &amp; 2 are open for preview. Pages 3 to {totalPages} (full calculations &amp; IV sheet) require unlocking.
+                <strong>Free Demo Mode:</strong> Pages 1 &amp; 2 are preview only. Downloading and Pages 3 to {totalPages} require payment.
               </span>
             </div>
             <button
               onClick={() => onOpenPdfPaywall(unit)}
               className="text-xs font-bold text-amber-300 hover:underline shrink-0 cursor-pointer"
             >
-              Pay ₹49 to Unlock →
+              Pay ₹{unit.priceINR || 49} to Unlock &amp; Download →
             </button>
           </div>
         )}
 
-        {/* MAIN VIEWER CANVAS: A4 SHEET SIMULATION */}
+        {/* MAIN VIEWER CANVAS: A4 SHEET */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8 bg-slate-950/70 flex justify-center">
           <div 
             className="w-full max-w-[760px] bg-white text-slate-900 rounded-sm shadow-2xl border border-slate-300 min-h-[880px] p-6 sm:p-10 relative flex flex-col justify-between transition-transform"
@@ -304,20 +255,18 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 </div>
               </div>
 
-              {/* Watermark bar */}
               <div className="mt-3 py-1 px-2.5 bg-slate-100 rounded text-[10px] font-bold text-slate-600 flex items-center justify-between">
                 <span>
                   {isPaid ? 'ACCREDITED STUDENT LICENSE • VERIFIED DISTINCTION (D*)' : 'FREE DEMO PREVIEW (PAGES 1-2 FREE) • ALL PDFS PAYABLE'}
                 </span>
                 <span className="text-emerald-700 font-mono">
-                  {isPaid ? '✓ UNLOCKED' : 'DEMO WATERMARK'}
+                  {isPaid ? '✓ UNLOCKED' : 'PAYMENT REQUIRED TO DOWNLOAD'}
                 </span>
               </div>
             </div>
 
             {/* PAGE BODY CONTENT */}
             <div className="flex-1 space-y-6">
-              {/* PAGE 1: Specification & Learning Outcomes (FREE DEMO) */}
               {currentPage === 1 && (
                 <div className="space-y-6 animate-in fade-in duration-150">
                   <div className="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200">
@@ -363,7 +312,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 </div>
               )}
 
-              {/* PAGE 2: Engineering Principles & Formula Reference (FREE DEMO) */}
               {currentPage === 2 && (
                 <div className="space-y-6 animate-in fade-in duration-150">
                   <div className="p-4 bg-blue-50/70 rounded-xl border border-blue-200">
@@ -371,9 +319,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                       <Calculator className="w-4 h-4 text-blue-700" />
                       4.0 Governing Formulae &amp; Mathematical Basis (Demo Preview)
                     </h3>
-                    <p className="text-xs text-slate-700 leading-relaxed mb-3">
-                      The following analytical formulations represent the required theoretical framework for achieving Distinction criteria on this unit:
-                    </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
                       <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
                         <span className="text-[10px] text-blue-800 font-bold block mb-1">Equilibrium Conditions:</span>
@@ -390,33 +335,17 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                         <code>δ_max ≤ Span / 250 (SLS)</code>
                       </div>
                       <div className="p-3 bg-white rounded-lg border border-blue-200 shadow-2xs">
-                        <span className="text-[10px] text-blue-800 font-bold block mb-1">Design Ultimate Factored Load:</span>
+                        <span className="text-[10px] text-blue-800 font-bold block mb-1">Design Factored Load:</span>
                         <code>w_Ed = 1.35·G_k + 1.50·Q_k</code>
                       </div>
                     </div>
                   </div>
 
-                  <div>
-                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 mb-2">
-                      5.0 Initial Problem Statement &amp; Design Boundary Constraints
-                    </h3>
-                    <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-200 text-xs text-slate-700 space-y-2">
-                      <p>
-                        A continuous urban commercial floor requires sizing for primary structural members spanning L = 6.0m under characteristic dead loads (G_k = 12 kN/m) and imposed live occupancy loads (Q_k = 12 kN/m).
-                      </p>
-                      <div className="p-3 bg-white border border-slate-200 rounded font-mono text-[11px] text-slate-800">
-                        Design Ultimate Factored UDL: w_Ed = 1.35(12) + 1.50(12) = 34.2 kN/m<br />
-                        Point Load at third-point (x = 2.0m): P_Ed = 45.0 kN
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Teaser for Page 3 */}
                   <div className="p-4 bg-amber-50 rounded-xl border border-amber-300 text-xs text-amber-900 flex items-center justify-between">
                     <div>
                       <span className="font-bold block">Page 2 Demo Concluded</span>
                       <span className="text-[11px] text-amber-800">
-                        Next page contains the full worked calculations, shear envelopes &amp; Eurocode verification.
+                        Pages 3-6 require payment before reading or downloading.
                       </span>
                     </div>
                     <button
@@ -429,10 +358,8 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 </div>
               )}
 
-              {/* PAGES 3 to 6: DETAILED CALCULATIONS, EUROCODE, RUBRIC & IV SHEET */}
               {currentPage >= 3 && (
                 <div className="relative min-h-[500px]">
-                  {/* UNDERLYING PAGE CONTENT (Blurred if locked) */}
                   <div className={`space-y-6 transition-all ${isPageLocked ? 'filter blur-md opacity-25 select-none pointer-events-none' : ''}`}>
                     {currentPage === 3 && (
                       <div className="space-y-4">
@@ -441,22 +368,7 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                             6.0 Distinction-Grade Numerical Calculations &amp; Envelopes
                           </h3>
                         </div>
-
-                        <div className="font-mono text-xs bg-slate-900 text-emerald-400 p-4 rounded-xl space-y-2">
-                          <div className="text-slate-400 font-bold border-b border-slate-800 pb-1">
-                            --- STATICAL DETERMINACY &amp; SUPPORT REACTIONS ---
-                          </div>
-                          <div>R_B = [ (34.2 kN/m × 6.0m²) / 2 + 45.0 kN × 2.0m ] / 6.0m = 117.6 kN</div>
-                          <div>R_A = (34.2 × 6.0) + 45.0 - 117.6 = 132.6 kN</div>
-                          <div className="text-slate-400 font-bold border-b border-slate-800 pt-2 pb-1">
-                            --- POINT OF ZERO SHEAR &amp; MAXIMUM BENDING MOMENT ---
-                          </div>
-                          <div>x_0 = 2.0m + [ (132.6 - 34.2 × 2.0 - 45.0) / 34.2 ] = 2.56 m from Support A</div>
-                          <div>M_Ed = 132.6(2.56) - 45.0(0.56) - 34.2(2.56²/2) = 202.19 kN·m</div>
-                        </div>
-
                         <div className="space-y-2">
-                          <h4 className="text-xs font-bold text-slate-900">Sample Worked Steps:</h4>
                           {unit.previewContent.sampleCalculations.map((step, idx) => (
                             <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200 rounded text-xs font-mono text-slate-800">
                               [{idx + 1}] {step}
@@ -473,26 +385,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                             7.0 Eurocode 3 Structural Steel Sizing &amp; Deflection Checks
                           </h3>
                         </div>
-
-                        <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3 text-xs text-slate-800">
-                          <p>
-                            <strong>Section Adopted:</strong> Universal Beam UB 406 × 178 × 54 kg/m in S275 steel.
-                          </p>
-                          <div className="grid grid-cols-2 gap-2 font-mono text-[11px]">
-                            <div className="p-2 bg-white rounded border border-slate-200">
-                              W_pl,y = 935 cm³ &gt; 735.2 cm³ (78.6% Capacity)
-                            </div>
-                            <div className="p-2 bg-white rounded border border-slate-200">
-                              V_Ed = 132.6 kN &lt; 246.1 kN (No M-V reduction)
-                            </div>
-                            <div className="p-2 bg-white rounded border border-slate-200">
-                              δ_mid = 10.56 mm &lt; 24.0 mm Limit (PASS)
-                            </div>
-                            <div className="p-2 bg-white rounded border border-slate-200">
-                              Flange Buckling: Class 1 Plastic Section
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     )}
 
@@ -503,21 +395,6 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                             8.0 Pearson BTEC Distinction Rubric Evidence (P/M/D)
                           </h3>
                         </div>
-
-                        <div className="space-y-2.5 text-xs">
-                          <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                            <span className="font-bold text-blue-900 block mb-0.5">PASS CRITERIA (P):</span>
-                            <p className="text-blue-950">{unit.previewContent.gradingCriteria.pass}</p>
-                          </div>
-                          <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
-                            <span className="font-bold text-indigo-900 block mb-0.5">MERIT CRITERIA (M):</span>
-                            <p className="text-indigo-950">{unit.previewContent.gradingCriteria.merit}</p>
-                          </div>
-                          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                            <span className="font-bold text-emerald-900 block mb-0.5">DISTINCTION CRITERIA (D*):</span>
-                            <p className="text-emerald-950">{unit.previewContent.gradingCriteria.distinction}</p>
-                          </div>
-                        </div>
                       </div>
                     )}
 
@@ -527,30 +404,11 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                           <h3 className="text-xs font-bold text-purple-950 uppercase tracking-wider">
                             9.0 Internal Verification (IV) Sign-Off &amp; Plagiarism Declaration
                           </h3>
-                          <span className="text-[10px] bg-purple-200 text-purple-900 font-mono font-bold px-2 py-0.5 rounded">
-                            STATUS: SIGNED OFF
-                          </span>
-                        </div>
-
-                        <div className="border border-slate-200 rounded-xl p-4 bg-slate-50 space-y-2.5 text-xs text-slate-800">
-                          <div className="flex justify-between py-1 border-b border-slate-200">
-                            <span>Lead Verifier:</span>
-                            <span className="font-bold text-slate-900">Dr. R. Henderson, CEng MICE</span>
-                          </div>
-                          <div className="flex justify-between py-1 border-b border-slate-200">
-                            <span>Centre Approved Grade:</span>
-                            <span className="font-bold text-emerald-700">DISTINCTION (D*) CONFIRMED</span>
-                          </div>
-                          <div className="flex justify-between py-1">
-                            <span>Originality Authenticity Score:</span>
-                            <span className="font-bold text-slate-900">100% Unique Handwritten Work</span>
-                          </div>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* FROSTED GLASS PAYWALL OVERLAY (Rendered when page is locked) */}
                   {isPageLocked && (
                     <div className="absolute inset-0 flex items-center justify-center p-3 animate-in fade-in duration-200">
                       <div className="bg-slate-900/95 backdrop-blur-md rounded-2xl border-2 border-emerald-500/60 p-5 sm:p-7 max-w-md w-full shadow-2xl text-center text-white space-y-4">
@@ -560,53 +418,24 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
 
                         <div>
                           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold uppercase tracking-wider mb-2">
-                            <span>Demo Preview Limit Reached</span>
+                            <span>Payment Required</span>
                           </div>
                           <h4 className="text-base sm:text-lg font-black text-white leading-tight">
-                            Page {currentPage} is Locked
+                            Page {currentPage} and Full Download Locked
                           </h4>
                           <p className="text-xs text-slate-300 mt-1.5 leading-relaxed">
-                            Pages 1 &amp; 2 are free demo pages. Unlock all remaining distinction calculations, Eurocode sizing &amp; signed IV verification for only <strong>₹49</strong>.
+                            Without payment, full pages and downloads remain protected. Unlock all distinction calculations &amp; signed IV verification for <strong>₹{unit.priceINR || 49}</strong>.
                           </p>
                         </div>
 
-                        {/* Feature checklist */}
-                        <div className="bg-slate-800/90 rounded-xl p-3 text-left text-xs space-y-1.5 border border-slate-700">
-                          <div className="flex items-center gap-2 text-slate-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Full numerical worked calculations &amp; SFD/BMD</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-slate-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Eurocode 3 structural steel member selection</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-slate-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Distinction (D*) grading criteria evidence</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-slate-200">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span>Official signed Pearson IV verification sheet</span>
-                          </div>
-                        </div>
-
-                        {/* Price & Primary CTA */}
                         <div className="space-y-2 pt-1">
                           <button
                             onClick={() => onOpenPdfPaywall(unit)}
                             className="w-full py-3 bg-[#185a36] hover:bg-[#13492c] text-white rounded-xl text-xs sm:text-sm font-black shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
                           >
                             <Zap className="w-4 h-4 fill-white" />
-                            <span>Unlock Full 6-Page PDF for ₹49</span>
+                            <span>Unlock &amp; Download PDF (₹{unit.priceINR || 49})</span>
                           </button>
-
-                          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400">
-                            <span>Instant UPI / QR / Card</span>
-                            <span>•</span>
-                            <span>One-time payment</span>
-                            <span>•</span>
-                            <span>Lifetime access</span>
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -615,14 +444,10 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
               )}
             </div>
 
-            {/* OFFICIAL PDF FOOTER */}
+            {/* FOOTER */}
             <div className="border-t border-slate-200 pt-3 mt-6 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-              <div>
-                Pearson BTEC Civil Engineering • Verified Distinction Pack
-              </div>
-              <div className="font-bold text-slate-700">
-                Page {currentPage} of {totalPages}
-              </div>
+              <div>Pearson BTEC Civil Engineering • Verified Distinction Pack</div>
+              <div className="font-bold text-slate-700">Page {currentPage} of {totalPages}</div>
             </div>
           </div>
         </div>
@@ -651,7 +476,7 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 className="px-4 py-1.5 rounded-lg font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>Download Unlocked PDF</span>
+                <span>Download PDF</span>
               </button>
             ) : (
               <button
@@ -659,7 +484,7 @@ export const PDFViewerModal: React.FC<PDFViewerModalProps> = ({
                 className="px-4 py-1.5 rounded-lg font-bold text-white bg-[#185a36] hover:bg-[#13492c] transition flex items-center gap-1.5 cursor-pointer shadow-xs"
               >
                 <Lock className="w-3.5 h-3.5 text-emerald-300" />
-                <span>Unlock for ₹49</span>
+                <span>Unlock &amp; Download (₹{unit.priceINR || 49})</span>
               </button>
             )}
           </div>

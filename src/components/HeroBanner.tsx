@@ -1,18 +1,16 @@
 import React from 'react';
-import { CheckCircle2, FileText, Award, ShieldCheck, HardHat, Sliders, ArrowRight, Video } from 'lucide-react';
+import { CheckCircle2, FileText, Award, ShieldCheck, HardHat, Sliders, ArrowRight, DollarSign, Lock } from 'lucide-react';
 
 interface HeroBannerProps {
   onLearnMore?: () => void;
   onExemplarClick?: () => void;
   onOpenDeck?: () => void;
-  onOpenVideos?: () => void;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ 
   onLearnMore, 
   onExemplarClick, 
-  onOpenDeck,
-  onOpenVideos 
+  onOpenDeck 
 }) => {
   return (
     <div className="rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-xs my-2">
@@ -27,7 +25,6 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
-            {/* Structural suspension bridge cable lines */}
             <path d="M0,80 Q200,160 400,90 T800,100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 2" />
             <path d="M50,140 L150,40 L250,140 L350,40" fill="none" stroke="currentColor" strokeWidth="1.2" />
           </svg>
@@ -42,22 +39,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {/* Pearson BTEC Aligned Pill Badge */}
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-700/95 border border-emerald-500/40 text-white text-[11px] font-bold tracking-wide uppercase mb-3 shadow-xs">
             <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Pearson BTEC Aligned</span>
+            <span>Pearson BTEC Aligned • Verified Coursework</span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-tight">
-            BTEC Civil Engineering Notes &amp; Unit Portfolios
+            Official Civil Engineering Coursework &amp; Portfolios (PDF)
           </h1>
           <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <span className="px-2 py-0.5 rounded-md bg-amber-400/25 text-amber-200 border border-amber-400/40 text-[10px] font-bold">
-              All PDFs Payable (₹49)
+            <span className="px-2 py-0.5 rounded-md bg-amber-400/25 text-amber-200 border border-amber-400/40 text-[10px] font-bold flex items-center gap-1">
+              <Lock className="w-3 h-3 text-amber-300" />
+              <span>All PDFs Payable • Strictly Protected</span>
             </span>
             <span className="px-2 py-0.5 rounded-md bg-emerald-400/25 text-emerald-300 border border-emerald-400/40 text-[10px] font-semibold">
-              2 Free Demo Pages
+              2 Free Demo Pages per PDF
             </span>
             <span className="px-2 py-0.5 rounded-md bg-white/15 text-slate-200 border border-white/20 text-[10px]">
-              D* Verified Calculations
+              Razorpay Secured (INR ₹)
             </span>
           </div>
         </div>
@@ -66,7 +64,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       {/* Coursework Specs Text & 3 Quick Features */}
       <div className="p-4 sm:p-5 space-y-4">
         <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
-          Coursework templates, assignment briefs, unit revision notes, and distinction-grade calculation guides aligned with Pearson BTEC Civil Engineering specifications.
+          Coursework templates, assignment briefs, unit revision notes, and distinction-grade calculation guides aligned with Pearson BTEC Civil Engineering specifications. Full PDFs remain protected until verified payment.
         </p>
 
         {/* 3 Metric / Quick Cards in a row */}
@@ -83,7 +81,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               Unit-by-Unit
             </span>
             <span className="text-[10px] text-slate-500 leading-tight mt-0.5">
-              Full Spec Notes
+              Full Spec PDFs
             </span>
           </div>
 
@@ -99,7 +97,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               Distinction Grade
             </span>
             <span className="text-[10px] text-emerald-700 font-medium leading-tight mt-0.5">
-              Exemplar Portfolio
+              Exemplar Pack
             </span>
           </div>
 
@@ -120,32 +118,31 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           </div>
         </div>
 
-        {/* Action button into Deck Board & Video Downloads */}
+        {/* Action buttons */}
         <div className="space-y-2">
-          {onOpenVideos && (
+          {onLearnMore && (
             <button
-              onClick={onOpenVideos}
-              className="w-full py-2.5 px-3.5 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-900 text-white rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:opacity-95 transition-all shadow-xs group"
+              onClick={onLearnMore}
+              className="w-full py-2.5 px-3.5 bg-gradient-to-r from-emerald-800 via-emerald-700 to-slate-900 text-white rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:opacity-95 transition-all shadow-xs group"
             >
               <div className="flex items-center gap-2">
-                <Video className="w-4 h-4 text-amber-200" />
-                <span>Civil Video Masterclasses &amp; Lab Demos</span>
-                <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full">₹49 only</span>
+                <DollarSign className="w-4 h-4 text-emerald-300" />
+                <span>View Complete PDF Pricing Table &amp; Disounts</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-amber-200 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-emerald-300 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
 
           {onOpenDeck && (
             <button
               onClick={onOpenDeck}
-              className="w-full py-2.5 px-3.5 bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white rounded-xl text-xs font-semibold flex items-center justify-between cursor-pointer hover:opacity-95 transition-all shadow-xs border border-emerald-500/30 group"
+              className="w-full py-2.5 px-3.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center justify-between cursor-pointer transition-all border border-slate-200 group"
             >
               <div className="flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-emerald-400 group-hover:rotate-45 transition-transform" />
-                <span>Interactive Structural Deck Board &amp; Simulator</span>
+                <Sliders className="w-4 h-4 text-slate-700 group-hover:rotate-45 transition-transform" />
+                <span>Interactive Structural Deck Board &amp; Deflection Simulator</span>
               </div>
-              <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-slate-700 group-hover:translate-x-1 transition-transform" />
             </button>
           )}
         </div>

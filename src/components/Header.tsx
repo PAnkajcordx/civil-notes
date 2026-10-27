@@ -5,7 +5,6 @@ import {
   User,
   Smartphone,
   Monitor,
-  Video,
   Bot,
   ShieldCheck,
   LogIn,
@@ -23,7 +22,6 @@ interface HeaderProps {
   onPricingClick: () => void;
   isMobileFrame: boolean;
   onToggleFrame: () => void;
-  onVideosClick?: () => void;
   onAutoResponderClick?: () => void;
 }
 
@@ -37,7 +35,6 @@ export const Header: React.FC<HeaderProps> = ({
   onPricingClick,
   isMobileFrame,
   onToggleFrame,
-  onVideosClick,
   onAutoResponderClick,
 }) => {
   const { user } = useAuth();
@@ -95,11 +92,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Quick PDF Store Button */}
           <button
             onClick={onPricingClick}
-            className="flex items-center gap-1 px-2 py-1 text-xs font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 text-xs font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 rounded-lg transition-colors cursor-pointer"
             title="PDF Pricing Table"
           >
             <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
-            <span className="hidden xs:inline text-[11px]">Prices</span>
+            <span className="text-[11px]">PDF Store</span>
           </button>
 
           {/* Frame Toggle (Desktop vs Mobile Preview) */}

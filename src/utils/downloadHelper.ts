@@ -1,6 +1,15 @@
 import { BTECUnit } from '../types';
+import { isPdfPaid } from './pdfPaymentHelper';
 
+/**
+ * Downloads unit portfolio only after payment verification.
+ * Strictly prevents downloading without verified payment.
+ */
 export const downloadUnitPortfolio = (unit: BTECUnit) => {
+  if (!isPdfPaid(unit.id)) {
+    throw new Error('Payment required: You must purchase this PDF before downloading.');
+  }
+
   const fileContent = `===============================================================
 CIVILNOTES - SPECIALIST PEARSON BTEC CIVIL ENGINEERING RESOURCE
 ===============================================================
@@ -8,8 +17,8 @@ Unit: ${unit.title}
 Code: ${unit.unitCodeTag} | Spec: ${unit.specificationCode}
 Level: ${unit.level} (${unit.levelType})
 Credits: ${unit.credits} | Guided Learning Hours: ${unit.guidedLearningHours}
-Status: ${unit.exemplarStatus}
-Curated by: CivilNotes (Founder: Prince Maurya, Varanasi)
+Status: ${unit.exemplarStatus} (Verified Paid Student License)
+Curated by: CivilNotes Engineering Faculty (Prince Maurya, Varanasi)
 ===============================================================
 
 1. UNIT OVERVIEW & SPECIFICATION
@@ -45,7 +54,7 @@ INTERNAL VERIFICATION (IV) SIGN-OFF CHECKLIST:
 [✓] All calculation units (kN, m, N/mm², kPa) checked for dimensional consistency
 [✓] Distinction rubric requirements fully satisfied with critical evaluation
 ===============================================================
-Downloaded from CivilNotes - Pearson BTEC Level 3, HNC & HND Portal
+Official Paid License Downloaded from CivilNotes
 `;
 
   const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight, Video, FileCheck, ExternalLink, Lock, FileText, Zap } from 'lucide-react';
-import { BTECUnit, CivilVideo, PaymentTransaction } from '../types';
-import { CIVIL_VIDEOS } from '../data/videoData';
-import { getPaidVideoIds, getAllTransactions, downloadUnlockedVideoPackage } from '../utils/videoPaymentHelper';
-import { getPaidPdfIds, isPdfPaid, hasAllAccessPass } from '../utils/pdfPaymentHelper';
+import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight, Lock, FileText, ShoppingBag, ShieldCheck } from 'lucide-react';
+import { BTECUnit } from '../types';
+import { getPaidPdfIds, isPdfPaid } from '../utils/pdfPaymentHelper';
 
 interface SavedViewProps {
   savedUnits: BTECUnit[];
@@ -11,7 +9,6 @@ interface SavedViewProps {
   onPreviewUnit: (unit: BTECUnit) => void;
   onDownloadUnit: (unit: BTECUnit) => void;
   onExploreMore: () => void;
-  onOpenVideoPaywall?: (video: CivilVideo) => void;
   onOpenPdfPaywall?: (unit: BTECUnit) => void;
 }
 
@@ -21,10 +18,8 @@ export const SavedView: React.FC<SavedViewProps> = ({
   onPreviewUnit,
   onDownloadUnit,
   onExploreMore,
-  onOpenVideoPaywall,
   onOpenPdfPaywall
 }) => {
-  // Interactive checklist tracking for students
   const [checklist, setChecklist] = useState<{ [key: string]: boolean }>({
     'c1': true,
     'c2': true,
@@ -33,12 +28,10 @@ export const SavedView: React.FC<SavedViewProps> = ({
     'c5': false
   });
 
-  const [paidIds, setPaidIds] = useState<string[]>([]);
-  const [transactions, setTransactions] = useState<PaymentTransaction[]>([]);
+  const [paidPdfIds, setPaidPdfIds] = useState<string[]>([]);
 
   useEffect(() => {
-    setPaidIds(getPaidVideoIds());
-    setTransactions(getAllTransactions());
+    setPaidPdfIds(getPaidPdfIds());
   }, []);
 
   const toggleCheck = (id: string) => {
@@ -48,9 +41,6 @@ export const SavedView: React.FC<SavedViewProps> = ({
   const completedCount = Object.values(checklist).filter(Boolean).length;
   const progressPercent = Math.round((completedCount / Object.keys(checklist).length) * 100);
 
-  // Match paid videos
-  const unlockedVideos = CIVIL_VIDEOS.filter(v => paidIds.includes(v.id));
-
   return (
     <div className="py-4 space-y-6">
       {/* Header */}
@@ -58,77 +48,12 @@ export const SavedView: React.FC<SavedViewProps> = ({
         <div className="flex items-center gap-2 mb-1">
           <Bookmark className="w-5 h-5 text-[#185a36] fill-[#185a36]" />
           <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Saved Portfolios &amp; Unlocked Resources
+            Saved Coursework &amp; Unlocked PDFs
           </h2>
         </div>
         <p className="text-xs text-slate-500 leading-relaxed">
-          Bookmarked unit exemplar notes, unlocked ₹49 video packages, and Pearson grading verification checklist.
+          Bookmarked unit exemplar notes and Pearson BTEC grading verification checklist. Full PDFs require verified payment to download.
         </p>
-      </div>
-
-      {/* Unlocked ₹49 Video Packages Section if any paid */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-amber-100 text-amber-900">
-              <Video className="w-4 h-4" />
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-slate-900">
-                Unlocked ₹49 Video Masterclasses ({paidIds.length})
-              </h3>
-              <p className="text-[11px] text-slate-500">
-                {paidIds.length > 0 ? 'Lifetime offline access & download licenses active' : 'No videos purchased yet'}
-              </p>
-            </div>
-          </div>
-          <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 uppercase">
-            Paid Pass
-          </span>
-        </div>
-
-        {paidIds.length === 0 ? (
-          <div className="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center space-y-1.5">
-            <p className="text-xs text-slate-600 font-medium">No videos purchased yet</p>
-            <p className="text-[11px] text-slate-400">
-              Download any video masterclass or lab demo for ₹49 to keep lifetime offline access here.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {unlockedVideos.map(video => {
-              const matchedTxn = transactions.find(t => t.videoId === video.id);
-              return (
-                <div 
-                  key={video.id}
-                  className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="px-1.5 py-0.5 rounded bg-emerald-600 text-white font-mono text-[9px] font-bold">
-                        {video.unitCodeTag}
-                      </span>
-                      <span className="text-xs font-bold text-slate-900 truncate">
-                        {video.title}
-                      </span>
-                    </div>
-                    <div className="text-[10px] font-mono text-slate-400 mt-0.5">
-                      Ref: {matchedTxn?.txnId || 'TXN_VERIFIED'} • {video.fileSize} • {video.quality}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => downloadUnlockedVideoPackage(video, matchedTxn)}
-                    className="py-1.5 px-3 bg-[#185a36] hover:bg-[#13492c] text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download (Free)</span>
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
 
       {/* Coursework Assignment Verification Tracker */}
@@ -186,7 +111,7 @@ export const SavedView: React.FC<SavedViewProps> = ({
         <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center justify-between">
           <span>Bookmarked Units ({savedUnits.length})</span>
           {savedUnits.length > 0 && (
-            <span className="text-xs text-slate-400 font-normal">Available offline</span>
+            <span className="text-xs text-slate-400 font-normal">Stored locally</span>
           )}
         </h3>
 
@@ -195,7 +120,7 @@ export const SavedView: React.FC<SavedViewProps> = ({
             <Bookmark className="w-8 h-8 text-slate-300 mx-auto" />
             <p className="text-sm font-semibold text-slate-700">No saved unit notes yet</p>
             <p className="text-xs text-slate-400 max-w-xs mx-auto">
-              Tap the bookmark icon on any unit card in the Notes tab to keep quick access here for offline review.
+              Tap the bookmark icon on any unit card in the Notes tab to keep quick access here.
             </p>
             <button
               onClick={onExploreMore}
@@ -228,7 +153,7 @@ export const SavedView: React.FC<SavedViewProps> = ({
                       ) : (
                         <>
                           <span className="text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                            PDF: ₹{unit.priceINR || 49}
+                            Payable PDF: ₹{unit.priceINR || 49}
                           </span>
                           <span className="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                             2 Free Demo Pages
@@ -258,15 +183,16 @@ export const SavedView: React.FC<SavedViewProps> = ({
                         className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Download className="w-3.5 h-3.5" />
-                        <span>Download</span>
+                        <span>Download PDF</span>
                       </button>
                     ) : (
                       <button
                         onClick={() => onOpenPdfPaywall ? onOpenPdfPaywall(unit) : onDownloadUnit(unit)}
                         className="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        title="Payment Required before downloading"
                       >
-                        <Lock className="w-3 h-3 text-emerald-300" />
-                        <span>Unlock (₹{unit.priceINR || 49})</span>
+                        <Lock className="w-3 h-3 text-amber-300" />
+                        <span>Buy PDF (₹{unit.priceINR || 49})</span>
                       </button>
                     )}
                     <button

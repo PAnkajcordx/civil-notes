@@ -17,12 +17,8 @@ import { PDFPaywallModal } from './components/PDFPaywallModal';
 import { ToolkitModal } from './components/ToolkitModal';
 import { CartDrawer } from './components/CartDrawer';
 import { ProfileModal } from './components/ProfileModal';
-import { SubjectsView } from './components/SubjectsView';
 import { SavedView } from './components/SavedView';
-import { CommunityView } from './components/CommunityView';
 import { DeckBoard } from './components/DeckBoard';
-import { VideoLibrarySection } from './components/VideoLibrarySection';
-import { VideoPaywallModal } from './components/VideoPaywallModal';
 import { BackgroundCustomizer, BackgroundCanvas, BackgroundTheme } from './components/BackgroundCustomizer';
 import { DashboardAutoResponder } from './components/DashboardAutoResponder';
 
@@ -36,24 +32,18 @@ import { AuthModal } from './components/AuthModal';
 import { useAuth } from './context/AuthContext';
 
 import { BTEC_UNITS } from './data/civilData';
-import { CIVIL_VIDEOS } from './data/videoData';
-import { BTECUnit, CourseworkToolkit, PYQResource, CivilVideo } from './types';
-import { isVideoPaid } from './utils/videoPaymentHelper';
+import { BTECUnit, CourseworkToolkit, PYQResource } from './types';
 import { isPdfPaid, downloadUnlockedPDFDocument } from './utils/pdfPaymentHelper';
 import {
   CheckCircle2,
   Search,
   Smartphone,
   Monitor,
-  Video,
   Bot,
   ArrowRight,
   X,
   Lock,
-  FileText,
   DollarSign,
-  ShieldCheck,
-  ShoppingBag,
 } from 'lucide-react';
 
 const CATEGORIES = [
@@ -89,9 +79,6 @@ export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [isAuthOpen, setIsAuthOpen] = useState<boolean>(false);
 
-  // Video Paywall Modal state
-  const [activePaywallVideo, setActivePaywallVideo] = useState<CivilVideo | null>(null);
-
   // PDF Paywall Modal state
   const [activePdfPaywallUnit, setActivePdfPaywallUnit] = useState<BTECUnit | null>(null);
 
@@ -123,13 +110,19 @@ export default function App() {
     });
   };
 
-  // Trigger unit download or paywall
+  /**
+   * CRITICAL SECURITY RULE:
+   * Without payment, NEVER download the PDF.
+   * If unpurchased, immediately prompt for payment.
+   */
   const handleDownloadUnit = (unit: BTECUnit) => {
-    if (isPdfPaid(unit.id) || hasPurchased(unit.id)) {
+    const isPaid = isPdfPaid(unit.id) || hasPurchased(unit.id);
+    if (isPaid) {
       downloadUnlockedPDFDocument(unit);
-      showToast(`Downloaded full ${unit.unitCodeTag} Distinction Pack!`);
+      showToast(`Downloaded verified ${unit.unitCodeTag} Distinction Pack!`);
     } else {
-      // Map unit to catalog product and open checkout
+      // Strictly prevent download and trigger payment flow
+      showToast(`Payment required: Unlock ${unit.unitCodeTag} for ₹${unit.priceINR || 49} to download.`);
       const matchedCatalogProduct: CatalogProduct = {
         id: unit.id,
         serialNumber: unit.unitNumber,
@@ -150,34 +143,6 @@ export default function App() {
     }
   };
 
-  // Trigger ₹49 Video Paywall for a unit
-  const handleOpenVideoPaywallForUnit = (unit: BTECUnit) => {
-    const matchingVideo =
-      CIVIL_VIDEOS.find(
-        v =>
-          v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
-          v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
-      ) || {
-        id: `vid-unit-${unit.unitNumber}`,
-        title: `${unit.unitCodeTag}: ${unit.title} Distinction Masterclass`,
-        unitCodeTag: unit.unitCodeTag,
-        duration: '45:00 min',
-        quality: '1080p Full HD',
-        fileSize: '390 MB',
-        tutorName: 'CivilNotes Accredited Faculty',
-        description: `Complete numerical walkthrough and coursework step-by-step guidance for ${unit.title}.`,
-        priceINR: 49,
-        thumbnailColor: 'from-blue-700 to-indigo-900',
-        topicsCovered: [
-          `${unit.title} Overview & Learning Outcomes`,
-          'Step-by-step Numerical Problems & Formula Application',
-          'BS EN / Eurocode Specifications Walkthrough',
-          'Distinction Criteria Sign-off Guidance',
-        ],
-      };
-    setActivePaywallVideo(matchingVideo);
-  };
-
   // Add toolkit/bundle to cart
   const handleAddToCart = (item: CourseworkToolkit | PYQResource) => {
     setCartItems(prev => [...prev, item]);
@@ -185,11 +150,8 @@ export default function App() {
   };
 
   const handleDownloadAllCart = () => {
-    showToast(`Initiating bulk download for ${cartItems.length} toolkits...`);
-    setTimeout(() => {
-      showToast('All toolkits verified and downloaded!');
-      setIsCartOpen(false);
-    }, 1500);
+    showToast(`Bulk download requires individual toolkit authorization.`);
+    setIsCartOpen(false);
   };
 
   // Filter units based on category, programme, and search query
@@ -273,10 +235,6 @@ export default function App() {
           }}
           isMobileFrame={isMobileFrame}
           onToggleFrame={() => setIsMobileFrame(prev => !prev)}
-          onVideosClick={() => {
-            setActiveTab('videos');
-            showToast('Showing ₹49 Video Masterclasses');
-          }}
           onAutoResponderClick={() => {
             setIsAutoResponderOpen(true);
             showToast('Dashboard Auto-Responder Active');
@@ -285,7 +243,7 @@ export default function App() {
 
         {/* Viewport Content */}
         <main className="px-3.5 sm:px-4 pb-20 pt-2">
-          {/* TAB 1: NOTES & UNITS */}
+          {/* TAB 1: NOTES & UNITS (PDF ONLY) */}
           {activeTab === 'notes' && (
             <div>
               {/* Search Bar & Programme Pills */}
@@ -369,7 +327,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Hero Banner Section */}
+              {/* Hero Banner Section (PDF only, no videos) */}
               <HeroBanner
                 onLearnMore={() => {
                   setActiveTab('pricing');
@@ -383,17 +341,13 @@ export default function App() {
                   setActiveTab('deck');
                   showToast('Opened Structural Deck Board');
                 }}
-                onOpenVideos={() => {
-                  setActiveTab('videos');
-                  showToast('Showing ₹49 Video Masterclasses');
-                }}
               />
 
               {/* BTEC Unit Portfolios Section Header */}
               <div className="pt-3 pb-2">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
-                    BTEC Unit Portfolios
+                    BTEC Unit Portfolios (PDF)
                   </h2>
                   <span className="text-[11px] font-medium text-slate-500">
                     Showing core units ({filteredUnits.length})
@@ -421,7 +375,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Units List */}
+              {/* Units List (100% PDF Only - Video button removed) */}
               <div className="space-y-3.5 mt-2">
                 {filteredUnits.length === 0 ? (
                   <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 space-y-2">
@@ -440,12 +394,6 @@ export default function App() {
                   </div>
                 ) : (
                   filteredUnits.map(unit => {
-                    const matchingVideo = CIVIL_VIDEOS.find(
-                      v =>
-                        v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
-                        v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
-                    );
-                    const isPaid = matchingVideo ? isVideoPaid(matchingVideo.id) : false;
                     const isPdfUnlocked = isPdfPaid(unit.id) || hasPurchased(unit.id);
 
                     return (
@@ -456,18 +404,13 @@ export default function App() {
                         onDownload={handleDownloadUnit}
                         isSaved={savedUnitIds.includes(unit.id)}
                         onToggleSave={handleToggleSave}
-                        onOpenVideoPaywall={() => handleOpenVideoPaywallForUnit(unit)}
-                        isVideoPaid={isPaid}
                         isPdfPaid={isPdfUnlocked}
-                        onOpenPdfPaywall={u => setActivePdfPaywallUnit(u)}
+                        onOpenPdfPaywall={u => handleDownloadUnit(u)}
                       />
                     );
                   })
                 )}
               </div>
-
-              {/* Featured Video Masterclasses Section */}
-              <VideoLibrarySection onSelectVideoForPaywall={vid => setActivePaywallVideo(vid)} />
 
               {/* Community Callout Box */}
               <CommunitySection
@@ -489,7 +432,7 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2: COMPLETE PDF PAYMENT TABLE (CORE REQUIREMENT) */}
+          {/* TAB 2: COMPLETE PDF PAYMENT TABLE */}
           {activeTab === 'pricing' && (
             <div className="py-2">
               <PDFPaymentTable
@@ -527,7 +470,7 @@ export default function App() {
                     Login Required to Access Purchased PDFs
                   </h3>
                   <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                    Sign in to view and download all your previously purchased portfolios, study notes, and coursework packs.
+                    Sign in to view and download all your previously purchased portfolios, study notes, and coursework packs. Without payment, downloads remain locked.
                   </p>
                   <button
                     onClick={() => setIsAuthOpen(true)}
@@ -549,14 +492,7 @@ export default function App() {
             />
           )}
 
-          {/* TAB 5: VIDEOS MASTERCLASSES (₹49) */}
-          {activeTab === 'videos' && (
-            <div className="py-2">
-              <VideoLibrarySection onSelectVideoForPaywall={vid => setActivePaywallVideo(vid)} />
-            </div>
-          )}
-
-          {/* TAB 6: SAVED PORTFOLIOS & CHECKLIST */}
+          {/* TAB 5: SAVED PORTFOLIOS & CHECKLIST */}
           {activeTab === 'saved' && (
             <SavedView
               savedUnits={savedUnits}
@@ -564,13 +500,12 @@ export default function App() {
               onPreviewUnit={u => setPreviewUnit(u)}
               onDownloadUnit={handleDownloadUnit}
               onExploreMore={() => setActiveTab('notes')}
-              onOpenVideoPaywall={vid => setActivePaywallVideo(vid)}
-              onOpenPdfPaywall={u => setActivePdfPaywallUnit(u)}
+              onOpenPdfPaywall={u => handleDownloadUnit(u)}
             />
           )}
         </main>
 
-        {/* Bottom Navigation Bar */}
+        {/* Bottom Navigation Bar (5 tabs, PDF only, no video tab) */}
         <BottomNav
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -619,7 +554,7 @@ export default function App() {
         }}
       />
 
-      {/* Protected PDF Viewer Modal */}
+      {/* Protected PDF Viewer Modal (Without payment, downloads are blocked) */}
       <ProtectedPDFViewerModal
         product={viewerProduct}
         isDemoMode={isDemoViewer}
@@ -640,12 +575,11 @@ export default function App() {
         onSuccess={() => showToast('Signed in successfully!')}
       />
 
-      {/* Interactive PDF Document Viewer */}
+      {/* Interactive PDF Document Viewer (Demo 2 Pages) */}
       <PDFViewerModal
         unit={previewUnit}
         onClose={() => setPreviewUnit(null)}
-        onOpenPdfPaywall={u => setActivePdfPaywallUnit(u)}
-        onOpenVideoPaywall={vid => setActivePaywallVideo(vid)}
+        onOpenPdfPaywall={u => handleDownloadUnit(u)}
       />
 
       {/* Dedicated PDF Paywall Modal */}
@@ -655,15 +589,6 @@ export default function App() {
         onOpenDemo={u => setPreviewUnit(u)}
         onPaymentSuccess={(u, txn) => {
           showToast(`₹${txn.amountINR} Payment Confirmed! ${u.unitCodeTag} Full PDF Unlocked.`);
-        }}
-      />
-
-      {/* Universal ₹49 Video Paywall & Download Modal */}
-      <VideoPaywallModal
-        video={activePaywallVideo}
-        onClose={() => setActivePaywallVideo(null)}
-        onSuccess={(vid, txn) => {
-          showToast(`₹49 Payment Confirmed! ${vid.unitCodeTag} Video Download Started.`);
         }}
       />
 

@@ -174,9 +174,25 @@
       "orderId": "ord_1793093015607_242gy",
       "status": "active",
       "grantedAt": "2026-10-27T09:23:35.617Z"
+    },
+    {
+      "id": "ent_1793096069565_4q0co",
+      "userId": "usr_student_001",
+      "userEmail": "student@civilnotes.com",
+      "productId": "prod_surveying_notes",
+      "orderId": "test_ord_lifecycle_1793096069565",
+      "status": "revoked",
+      "grantedAt": "2026-10-27T10:14:29.565Z",
+      "revokedAt": "2026-10-27T10:14:29.565Z"
     }
   ],
-  "webhookLogs": [],
+  "webhookLogs": [
+    {
+      "eventId": "evt_sec_test_1793096069564",
+      "eventType": "payment.captured",
+      "processedAt": "2026-10-27T10:14:29.564Z"
+    }
+  ],
   "auditLogs": [
     {
       "id": "audit_1793093015607_cvki",
