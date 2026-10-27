@@ -71,6 +71,48 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- Universal CivilNotes Loader: Supports Vite Dev Server & Static GitHub Pages -->
+    <script type="module">
+      (function() {
+        var isViteDev = Boolean(
+          window.__vite_plugin_react_preamble_installed__ ||
+          location.port === '3000' ||
+          location.hostname === 'localhost' ||
+          location.hostname === '127.0.0.1' ||
+          location.hostname.includes('.run.app')
+        );
+
+        if (isViteDev) {
+          import('/src/main.tsx').catch(function(err) {
+            console.warn('Vite dev import failed, trying compiled bundle:', err);
+            loadProductionBundle();
+          });
+        } else {
+          loadProductionBundle();
+        }
+
+        function loadProductionBundle() {
+          if (!document.querySelector('link[href*="app.css"]')) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = './assets/app.css';
+            document.head.appendChild(link);
+          }
+
+          var script = document.createElement('script');
+          script.type = 'module';
+          script.crossOrigin = 'anonymous';
+          script.src = './assets/app.js';
+          script.onerror = function() {
+            var fallback = document.createElement('script');
+            fallback.type = 'module';
+            fallback.crossOrigin = 'anonymous';
+            fallback.src = './assets/main.js';
+            document.body.appendChild(fallback);
+          };
+          document.body.appendChild(script);
+        }
+      })();
+    </script>
   </body>
 </html>
