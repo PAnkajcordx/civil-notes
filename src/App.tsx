@@ -19,10 +19,16 @@ import { ProfileModal } from './components/ProfileModal';
 import { SubjectsView } from './components/SubjectsView';
 import { SavedView } from './components/SavedView';
 import { CommunityView } from './components/CommunityView';
+import { DeckBoard } from './components/DeckBoard';
+import { VideoLibrarySection } from './components/VideoLibrarySection';
+import { VideoPaywallModal } from './components/VideoPaywallModal';
+import { BackgroundCustomizer, BackgroundCanvas, BackgroundTheme } from './components/BackgroundCustomizer';
 import { BTEC_UNITS } from './data/civilData';
-import { BTECUnit, CourseworkToolkit, PYQResource } from './types';
+import { CIVIL_VIDEOS } from './data/videoData';
+import { BTECUnit, CourseworkToolkit, PYQResource, CivilVideo } from './types';
 import { downloadUnitPortfolio } from './utils/downloadHelper';
-import { CheckCircle2, Search, Smartphone, Monitor } from 'lucide-react';
+import { isVideoPaid } from './utils/videoPaymentHelper';
+import { CheckCircle2, Search, Smartphone, Monitor, Sliders, Video } from 'lucide-react';
 
 const CATEGORIES = [
   'All Units',
@@ -48,8 +54,14 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   
-  // Mobile device frame preview toggle (defaults to false so users on desktop see a sleek mobile-centered frame, or can toggle full layout)
+  // Video Paywall Modal state (Universal ₹49 paywall for any video)
+  const [activePaywallVideo, setActivePaywallVideo] = useState<CivilVideo | null>(null);
+
+  // Mobile device frame preview toggle
   const [isMobileFrame, setIsMobileFrame] = useState(true);
+
+  // Background Theme state for dynamic engineering backgrounds
+  const [bgTheme, setBgTheme] = useState<BackgroundTheme>('blueprint');
 
   // Toast notification
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -77,6 +89,32 @@ export default function App() {
   const handleDownloadUnit = (unit: BTECUnit) => {
     downloadUnitPortfolio(unit);
     showToast(`Downloaded ${unit.unitCodeTag} Distinction Pack!`);
+  };
+
+  // Trigger ₹49 Video Paywall for a unit
+  const handleOpenVideoPaywallForUnit = (unit: BTECUnit) => {
+    const matchingVideo = CIVIL_VIDEOS.find(v => 
+      v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
+      v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
+    ) || {
+      id: `vid-unit-${unit.unitNumber}`,
+      title: `${unit.unitCodeTag}: ${unit.title} Distinction Masterclass`,
+      unitCodeTag: unit.unitCodeTag,
+      duration: '45:00 min',
+      quality: '1080p Full HD',
+      fileSize: '390 MB',
+      tutorName: 'CivilNotes Accredited Faculty',
+      description: `Complete numerical walkthrough and coursework step-by-step guidance for ${unit.title}.`,
+      priceINR: 49,
+      thumbnailColor: 'from-blue-700 to-indigo-900',
+      topicsCovered: [
+        `${unit.title} Overview & Learning Outcomes`,
+        'Step-by-step Numerical Problems & Formula Application',
+        'BS EN / Eurocode Specifications Walkthrough',
+        'Distinction Criteria Sign-off Guidance'
+      ]
+    };
+    setActivePaywallVideo(matchingVideo);
   };
 
   // Add toolkit/bundle to cart
@@ -134,17 +172,24 @@ export default function App() {
   }, [savedUnitIds]);
 
   return (
-    <div className="min-h-screen bg-[#f3f4f6] text-slate-900 font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen relative overflow-x-hidden font-sans antialiased selection:bg-emerald-100 selection:text-emerald-900">
+      {/* Dynamic Animated & Architectural Background Canvas */}
+      <BackgroundCanvas theme={bgTheme} />
+
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4 duration-200">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-4 duration-200">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Frame Container: allows toggling between mobile device screen and expanded view */}
-      <div className={`mx-auto transition-all duration-300 ${isMobileFrame ? 'max-w-[480px] my-0 sm:my-4 sm:rounded-3xl sm:shadow-2xl sm:border sm:border-slate-300 overflow-hidden bg-white' : 'max-w-4xl bg-white min-h-screen shadow-md'}`}>
+      <div className={`relative z-10 mx-auto transition-all duration-300 ${
+        isMobileFrame 
+          ? 'max-w-[490px] my-0 sm:my-4 sm:rounded-3xl sm:shadow-2xl sm:border sm:border-slate-300/80 overflow-hidden bg-white/95 backdrop-blur-xl' 
+          : 'max-w-4xl bg-white/95 backdrop-blur-xl min-h-screen shadow-2xl'
+      }`}>
         {/* Top Header */}
         <Header
           onSearchClick={() => {
@@ -160,6 +205,10 @@ export default function App() {
           onProfileClick={() => setIsProfileOpen(true)}
           isMobileFrame={isMobileFrame}
           onToggleFrame={() => setIsMobileFrame(prev => !prev)}
+          onVideosClick={() => {
+            setActiveTab('videos');
+            showToast('Showing ₹49 Video Masterclasses');
+          }}
         />
 
         {/* Viewport Content */}
@@ -184,6 +233,14 @@ export default function App() {
                 onExemplarClick={() => {
                   const unit1 = BTEC_UNITS[0];
                   setPreviewUnit(unit1);
+                }}
+                onOpenDeck={() => {
+                  setActiveTab('deck');
+                  showToast('Opened Structural Deck Board');
+                }}
+                onOpenVideos={() => {
+                  setActiveTab('videos');
+                  showToast('Showing ₹49 Video Masterclasses');
                 }}
               />
 
@@ -240,18 +297,33 @@ export default function App() {
                     </button>
                   </div>
                 ) : (
-                  filteredUnits.map((unit) => (
-                    <UnitCard
-                      key={unit.id}
-                      unit={unit}
-                      onPreview={setPreviewUnit}
-                      onDownload={handleDownloadUnit}
-                      isSaved={savedUnitIds.includes(unit.id)}
-                      onToggleSave={handleToggleSave}
-                    />
-                  ))
+                  filteredUnits.map((unit) => {
+                    const matchingVideo = CIVIL_VIDEOS.find(v => 
+                      v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
+                      v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
+                    );
+                    const isPaid = matchingVideo ? isVideoPaid(matchingVideo.id) : false;
+
+                    return (
+                      <UnitCard
+                        key={unit.id}
+                        unit={unit}
+                        onPreview={setPreviewUnit}
+                        onDownload={handleDownloadUnit}
+                        isSaved={savedUnitIds.includes(unit.id)}
+                        onToggleSave={handleToggleSave}
+                        onOpenVideoPaywall={() => handleOpenVideoPaywallForUnit(unit)}
+                        isVideoPaid={isPaid}
+                      />
+                    );
+                  })
                 )}
               </div>
+
+              {/* Featured Video Masterclasses (₹49) Section on Notes Page */}
+              <VideoLibrarySection
+                onSelectVideoForPaywall={(vid) => setActivePaywallVideo(vid)}
+              />
 
               {/* Community Callout Box ("Join 15,000+ BTEC Civil Students") */}
               <CommunitySection
@@ -278,7 +350,24 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2: SUBJECTS DIRECTORY */}
+          {/* TAB 2: RESPONSIVE DECK BOARD */}
+          {activeTab === 'deck' && (
+            <DeckBoard
+              onPreviewUnit={(u) => setPreviewUnit(u)}
+              onDownloadUnit={handleDownloadUnit}
+            />
+          )}
+
+          {/* TAB 3: VIDEOS MASTERCLASSES (₹49) */}
+          {activeTab === 'videos' && (
+            <div className="py-2">
+              <VideoLibrarySection
+                onSelectVideoForPaywall={(vid) => setActivePaywallVideo(vid)}
+              />
+            </div>
+          )}
+
+          {/* TAB 4: SUBJECTS DIRECTORY */}
           {activeTab === 'subjects' && (
             <SubjectsView
               units={BTEC_UNITS}
@@ -290,7 +379,7 @@ export default function App() {
             />
           )}
 
-          {/* TAB 3: SAVED PORTFOLIOS & CHECKLIST */}
+          {/* TAB 5: SAVED PORTFOLIOS & CHECKLIST */}
           {activeTab === 'saved' && (
             <SavedView
               savedUnits={savedUnits}
@@ -298,10 +387,11 @@ export default function App() {
               onPreviewUnit={(u) => setPreviewUnit(u)}
               onDownloadUnit={handleDownloadUnit}
               onExploreMore={() => setActiveTab('notes')}
+              onOpenVideoPaywall={(vid) => setActivePaywallVideo(vid)}
             />
           )}
 
-          {/* TAB 4: COMMUNITY & TUTOR HELP */}
+          {/* TAB 6: COMMUNITY & TUTOR HELP */}
           {activeTab === 'community' && (
             <CommunityView />
           )}
@@ -315,11 +405,20 @@ export default function App() {
         />
       </div>
 
+      {/* Background Customizer Theme Switcher */}
+      <BackgroundCustomizer
+        currentTheme={bgTheme}
+        onThemeChange={(newTheme) => {
+          setBgTheme(newTheme);
+          showToast(`Switched theme to ${newTheme.replace('_', ' ')}`);
+        }}
+      />
+
       {/* Floating Device Toggle for easy view switching on Desktop */}
       <div className="fixed bottom-20 right-4 z-40 hidden md:block">
         <button
           onClick={() => setIsMobileFrame(prev => !prev)}
-          className="flex items-center gap-2 px-3.5 py-2 bg-slate-900 text-white rounded-full text-xs font-semibold shadow-lg hover:bg-slate-800 transition-all border border-slate-700 cursor-pointer"
+          className="flex items-center gap-2 px-3.5 py-2 bg-slate-900/90 text-white rounded-full text-xs font-semibold shadow-lg hover:bg-slate-800 transition-all border border-slate-700 cursor-pointer backdrop-blur-md"
         >
           {isMobileFrame ? (
             <>
@@ -340,6 +439,16 @@ export default function App() {
         unit={previewUnit}
         onClose={() => setPreviewUnit(null)}
         onDownload={handleDownloadUnit}
+        onOpenVideoPaywall={(vid) => setActivePaywallVideo(vid)}
+      />
+
+      {/* Universal ₹49 Video Paywall & Download Modal */}
+      <VideoPaywallModal
+        video={activePaywallVideo}
+        onClose={() => setActivePaywallVideo(null)}
+        onSuccess={(vid, txn) => {
+          showToast(`₹49 Payment Confirmed! ${vid.unitCodeTag} Video Download Started.`);
+        }}
       />
 
       {/* Coursework Toolkit Modal */}

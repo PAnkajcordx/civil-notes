@@ -1,22 +1,65 @@
 import React, { useState } from 'react';
-import { X, Download, FileText, CheckCircle2, Calculator, ShieldCheck, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
-import { BTECUnit } from '../types';
+import { 
+  X, 
+  Download, 
+  FileText, 
+  CheckCircle2, 
+  Calculator, 
+  ShieldCheck, 
+  ZoomIn, 
+  ZoomOut, 
+  Maximize2,
+  Video,
+  Play,
+  Sparkles,
+  Lock
+} from 'lucide-react';
+import { BTECUnit, CivilVideo } from '../types';
+import { CIVIL_VIDEOS } from '../data/videoData';
+import { isVideoPaid } from '../utils/videoPaymentHelper';
 
 interface DocumentPreviewModalProps {
   unit: BTECUnit | null;
   onClose: () => void;
   onDownload: (unit: BTECUnit) => void;
+  onOpenVideoPaywall?: (video: CivilVideo) => void;
 }
 
 export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
   unit,
   onClose,
-  onDownload
+  onDownload,
+  onOpenVideoPaywall
 }) => {
-  const [activeDocTab, setActiveDocTab] = useState<'exemplar' | 'calculations' | 'criteria' | 'iv'>('exemplar');
+  const [activeDocTab, setActiveDocTab] = useState<'exemplar' | 'calculations' | 'criteria' | 'iv' | 'video'>('exemplar');
   const [zoomLevel, setZoomLevel] = useState<number>(100);
 
   if (!unit) return null;
+
+  // Find matching video or fallback
+  const matchingVideo = CIVIL_VIDEOS.find(v => 
+    v.unitCodeTag.toLowerCase().includes(unit.unitCodeTag.toLowerCase().slice(0, 6)) ||
+    v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
+  ) || {
+    id: `vid-unit-${unit.unitNumber}`,
+    title: `${unit.unitCodeTag}: ${unit.title} Distinction Masterclass`,
+    unitCodeTag: unit.unitCodeTag,
+    duration: '45:00 min',
+    quality: '1080p Full HD',
+    fileSize: '390 MB',
+    tutorName: 'CivilNotes Accredited Faculty',
+    description: `Complete numerical walkthrough and coursework step-by-step guidance for ${unit.title}.`,
+    priceINR: 49,
+    thumbnailColor: 'from-blue-700 to-indigo-900',
+    topicsCovered: [
+      `${unit.title} Overview & Learning Outcomes`,
+      'Step-by-step Numerical Problems & Formula Application',
+      'BS EN / Eurocode Specifications Walkthrough',
+      'Distinction Criteria Sign-off Guidance'
+    ]
+  };
+
+  const isPaid = isVideoPaid(matchingVideo.id);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200">
@@ -60,6 +103,17 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
               </button>
             </div>
 
+            {onOpenVideoPaywall && (
+              <button
+                onClick={() => onOpenVideoPaywall(matchingVideo)}
+                className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-amber-200 bg-amber-900/60 hover:bg-amber-900 border border-amber-500/40 transition-colors flex items-center gap-1.5 cursor-pointer"
+                title="Download 1080p Video for ₹49"
+              >
+                <Video className="w-3.5 h-3.5 text-amber-400" />
+                <span>{isPaid ? 'Video (Paid)' : 'Video (₹49)'}</span>
+              </button>
+            )}
+
             <button
               onClick={() => onDownload(unit)}
               className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 cursor-pointer"
@@ -102,6 +156,18 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
           >
             <Calculator className="w-3.5 h-3.5 text-indigo-700" />
             <span>SFD &amp; Calculations</span>
+          </button>
+
+          <button
+            onClick={() => setActiveDocTab('video')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5 ${
+              activeDocTab === 'video'
+                ? 'bg-white text-amber-900 shadow-xs font-bold'
+                : 'text-amber-800 hover:text-amber-900 bg-amber-50/60'
+            }`}
+          >
+            <Video className="w-3.5 h-3.5 text-amber-600" />
+            <span>Video Masterclass (₹49)</span>
           </button>
 
           <button
@@ -156,6 +222,76 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
             </p>
           </div>
 
+          {/* TAB: VIDEO MASTERCLASS (₹49) */}
+          {activeDocTab === 'video' && (
+            <div className="bg-white rounded-2xl border border-amber-200 overflow-hidden shadow-xs space-y-4 p-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-xl bg-amber-100 text-amber-900">
+                    <Video className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">{matchingVideo.title}</h4>
+                    <span className="text-xs text-slate-500">{matchingVideo.tutorName} • {matchingVideo.duration}</span>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <span className="text-xs text-slate-400 line-through mr-1">₹499</span>
+                  <span className="text-lg font-black text-emerald-700">₹49</span>
+                </div>
+              </div>
+
+              {/* Video Mockup Player */}
+              <div className="aspect-video bg-slate-900 rounded-xl relative overflow-hidden flex items-center justify-center text-white">
+                <div className="text-center p-4">
+                  <div className="w-14 h-14 bg-emerald-600/90 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg">
+                    <Play className="w-6 h-6 fill-white ml-0.5" />
+                  </div>
+                  <p className="text-xs font-semibold">{matchingVideo.quality} • High Bitrate Stream</p>
+                  <p className="text-[11px] text-slate-400 mt-1">{matchingVideo.fileSize} offline download pack</p>
+                </div>
+              </div>
+
+              {/* Topics Included */}
+              <div>
+                <h5 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">
+                  Covered in this Video Masterclass:
+                </h5>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700">
+                  {matchingVideo.topicsCovered.map((topic, i) => (
+                    <li key={i} className="flex items-start gap-2 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      <span className="text-emerald-600 font-bold">✓</span>
+                      <span>{topic}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Pay & Download Action */}
+              <div className="bg-amber-50 rounded-xl p-4 border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div>
+                  <div className="text-xs font-bold text-amber-950">
+                    {isPaid ? 'You own lifetime access to this video' : 'Download for ₹49.00 INR (Instant UPI / Card)'}
+                  </div>
+                  <div className="text-[11px] text-amber-800">
+                    Includes step-by-step calculations and assignment grading guide.
+                  </div>
+                </div>
+
+                {onOpenVideoPaywall && (
+                  <button
+                    onClick={() => onOpenVideoPaywall(matchingVideo)}
+                    className="w-full sm:w-auto py-2.5 px-5 bg-[#185a36] hover:bg-[#13492c] text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer shadow-md"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>{isPaid ? 'Re-Download Free' : 'Pay ₹49 & Download'}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Tab 1: Distinction Exemplar */}
           {activeDocTab === 'exemplar' && (
             <div className="space-y-4">
@@ -199,51 +335,17 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
           {activeDocTab === 'calculations' && (
             <div className="space-y-4">
               <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Calculator className="w-4 h-4 text-indigo-700" />
-                    <span>Step-by-Step Worked Calculations &amp; Envelopes</span>
-                  </h4>
-                  <span className="text-[11px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold">
-                    100% Dimensional Consistency
-                  </span>
-                </div>
-
-                <div className="space-y-2.5">
-                  {unit.previewContent.sampleCalculations.map((calc, i) => (
-                    <div 
-                      key={i} 
-                      className="p-3 bg-slate-900 text-emerald-300 font-mono text-xs rounded-lg border border-slate-800 overflow-x-auto shadow-inner"
-                    >
-                      <span className="text-slate-400 select-none">// Step {i + 1}: </span>
-                      {calc}
+                <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-indigo-700" />
+                  <span>Sample Distinction Calculation Sheets</span>
+                </h4>
+                <div className="space-y-2.5 font-mono text-xs bg-slate-900 text-emerald-400 p-4 rounded-xl overflow-x-auto shadow-inner">
+                  {unit.previewContent.sampleCalculations.map((calc, idx) => (
+                    <div key={idx} className="border-b border-slate-800 pb-2 last:border-b-0 last:pb-0">
+                      <span className="text-slate-500 mr-2">[{idx + 1}]</span>
+                      <span>{calc}</span>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              {/* Visual Diagram Representation */}
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-                <h5 className="text-xs font-bold text-slate-900 mb-2">
-                  Shear Force &amp; Bending Moment Envelope Diagram Reference
-                </h5>
-                <div className="h-28 bg-slate-50 border border-dashed border-slate-300 rounded-lg flex items-center justify-center p-3 relative overflow-hidden">
-                  <svg className="w-full h-full text-slate-700" viewBox="0 0 400 90">
-                    {/* Beam baseline */}
-                    <line x1="20" y1="45" x2="380" y2="45" stroke="#94a3b8" strokeWidth="2" />
-                    {/* Supports */}
-                    <polygon points="20,45 10,65 30,65" fill="#475569" />
-                    <circle cx="380" cy="55" r="8" fill="#475569" />
-                    {/* SFD curve */}
-                    <path d="M20,45 L20,20 L200,20 L200,70 L380,70 L380,45" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="3 3" />
-                    {/* BMD parabolic curve */}
-                    <path d="M20,45 Q200,85 380,45" fill="none" stroke="#16a34a" strokeWidth="2.5" />
-                    <text x="200" y="38" textAnchor="middle" fill="#1e293b" fontSize="10" fontWeight="bold">M_max = wL²/8</text>
-                  </svg>
-                </div>
-                <div className="flex items-center justify-between mt-2 text-[11px] text-slate-500">
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-1 bg-blue-600 inline-block"></span> Blue Dashed: SFD (kN)</span>
-                  <span className="flex items-center gap-1.5"><span className="w-2.5 h-1 bg-emerald-600 inline-block"></span> Green Parabola: BMD (kN·m)</span>
                 </div>
               </div>
             </div>
@@ -251,49 +353,44 @@ export const DocumentPreviewModal: React.FC<DocumentPreviewModalProps> = ({
 
           {/* Tab 3: Grading Criteria */}
           {activeDocTab === 'criteria' && (
-            <div className="space-y-3">
-              {/* Pass */}
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-800 border border-slate-200">
-                    PASS CRITERIA (P)
-                  </span>
-                  <span className="text-[10px] text-slate-500">Baseline Requirement</span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed pt-1">
-                  {unit.previewContent.gradingCriteria.pass}
-                </p>
-              </div>
+            <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
+              <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-amber-600" />
+                <span>Pearson BTEC Pass / Merit / Distinction Criteria</span>
+              </h4>
 
-              {/* Merit */}
-              <div className="bg-white p-4 rounded-xl border border-blue-200 bg-blue-50/20 shadow-2xs space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
-                    MERIT CRITERIA (M)
+              <div className="space-y-3">
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <span className="text-xs font-bold text-blue-900 uppercase tracking-wider block mb-1">
+                    Pass Level (P1, P2)
                   </span>
-                  <span className="text-[10px] text-blue-700 font-medium">Analytical Depth</span>
+                  <p className="text-xs text-blue-950 leading-relaxed">
+                    {unit.previewContent.gradingCriteria.pass}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed pt-1">
-                  {unit.previewContent.gradingCriteria.merit}
-                </p>
-              </div>
 
-              {/* Distinction */}
-              <div className="bg-white p-4 rounded-xl border border-emerald-300 bg-emerald-50/30 shadow-2xs space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                    DISTINCTION CRITERIA (D)
+                <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                  <span className="text-xs font-bold text-indigo-900 uppercase tracking-wider block mb-1">
+                    Merit Level (M1, M2)
                   </span>
-                  <span className="text-[10px] text-emerald-800 font-bold">Critical Evaluation</span>
+                  <p className="text-xs text-indigo-950 leading-relaxed">
+                    {unit.previewContent.gradingCriteria.merit}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed pt-1 font-medium">
-                  {unit.previewContent.gradingCriteria.distinction}
-                </p>
+
+                <div className="p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider block mb-1">
+                    Distinction Level (D1, D2)
+                  </span>
+                  <p className="text-xs text-emerald-950 leading-relaxed">
+                    {unit.previewContent.gradingCriteria.distinction}
+                  </p>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Tab 4: IV Checklist */}
+          {/* Tab 4: IV Sign-Off */}
           {activeDocTab === 'iv' && (
             <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">

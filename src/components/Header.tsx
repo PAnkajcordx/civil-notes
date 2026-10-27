@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingCart, User, Smartphone, Monitor } from 'lucide-react';
+import { Search, ShoppingCart, User, Smartphone, Monitor, Video } from 'lucide-react';
 
 interface HeaderProps {
   onSearchClick: () => void;
@@ -8,6 +8,7 @@ interface HeaderProps {
   onProfileClick: () => void;
   isMobileFrame: boolean;
   onToggleFrame: () => void;
+  onVideosClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -16,7 +17,8 @@ export const Header: React.FC<HeaderProps> = ({
   onCartClick,
   onProfileClick,
   isMobileFrame,
-  onToggleFrame
+  onToggleFrame,
+  onVideosClick
 }) => {
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200/90 transition-all">
@@ -56,6 +58,19 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right side utility icons */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Quick Videos ₹49 shortcut */}
+          {onVideosClick && (
+            <button
+              onClick={onVideosClick}
+              className="flex items-center gap-1 px-2 sm:px-2.5 py-1 text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 rounded-lg transition-colors cursor-pointer"
+              title="Civil Engineering Video Masterclasses (₹49)"
+            >
+              <Video className="w-3.5 h-3.5 text-amber-700" />
+              <span className="hidden xs:inline text-[11px]">Videos</span>
+              <span className="bg-amber-700 text-white text-[9px] px-1 rounded-sm leading-tight">₹49</span>
+            </button>
+          )}
+
           {/* Frame Toggle (Desktop vs Mobile Preview) */}
           <button
             onClick={onToggleFrame}

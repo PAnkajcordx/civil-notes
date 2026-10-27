@@ -64,3 +64,30 @@ export interface CommunityDiscussion {
   timeAgo: string;
   verifiedByTutor?: boolean;
 }
+
+export interface CivilVideo {
+  id: string;
+  title: string;
+  unitCodeTag: string;
+  duration: string;
+  quality: string;
+  fileSize: string;
+  tutorName: string;
+  description: string;
+  priceINR: number; // e.g. 49
+  thumbnailColor: string;
+  topicsCovered: string[];
+  sampleVideoUrl?: string;
+}
+
+export interface PaymentTransaction {
+  txnId: string;
+  videoId: string;
+  videoTitle: string;
+  amountINR: number;
+  method: 'upi' | 'card' | 'netbanking';
+  upiApp?: string;
+  upiId?: string;
+  timestamp: string;
+  status: 'SUCCESS' | 'PENDING' | 'FAILED';
+}

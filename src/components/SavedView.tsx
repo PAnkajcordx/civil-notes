@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight } from 'lucide-react';
-import { BTECUnit } from '../types';
+import React, { useState, useEffect } from 'react';
+import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight, Video, FileCheck, ExternalLink } from 'lucide-react';
+import { BTECUnit, CivilVideo, PaymentTransaction } from '../types';
+import { CIVIL_VIDEOS } from '../data/videoData';
+import { getPaidVideoIds, getAllTransactions, downloadUnlockedVideoPackage } from '../utils/videoPaymentHelper';
 
 interface SavedViewProps {
   savedUnits: BTECUnit[];
@@ -8,6 +10,7 @@ interface SavedViewProps {
   onPreviewUnit: (unit: BTECUnit) => void;
   onDownloadUnit: (unit: BTECUnit) => void;
   onExploreMore: () => void;
+  onOpenVideoPaywall?: (video: CivilVideo) => void;
 }
 
 export const SavedView: React.FC<SavedViewProps> = ({
@@ -15,7 +18,8 @@ export const SavedView: React.FC<SavedViewProps> = ({
   onRemoveSaved,
   onPreviewUnit,
   onDownloadUnit,
-  onExploreMore
+  onExploreMore,
+  onOpenVideoPaywall
 }) => {
   // Interactive checklist tracking for students
   const [checklist, setChecklist] = useState<{ [key: string]: boolean }>({
@@ -26,12 +30,23 @@ export const SavedView: React.FC<SavedViewProps> = ({
     'c5': false
   });
 
+  const [paidIds, setPaidIds] = useState<string[]>([]);
+  const [transactions, setTransactions] = useState<PaymentTransaction[]>([]);
+
+  useEffect(() => {
+    setPaidIds(getPaidVideoIds());
+    setTransactions(getAllTransactions());
+  }, []);
+
   const toggleCheck = (id: string) => {
     setChecklist(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const completedCount = Object.values(checklist).filter(Boolean).length;
   const progressPercent = Math.round((completedCount / Object.keys(checklist).length) * 100);
+
+  // Match paid videos
+  const unlockedVideos = CIVIL_VIDEOS.filter(v => paidIds.includes(v.id));
 
   return (
     <div className="py-4 space-y-6">
@@ -40,12 +55,77 @@ export const SavedView: React.FC<SavedViewProps> = ({
         <div className="flex items-center gap-2 mb-1">
           <Bookmark className="w-5 h-5 text-[#185a36] fill-[#185a36]" />
           <h2 className="text-lg font-bold text-slate-900 tracking-tight">
-            Saved Portfolios &amp; Coursework Hub
+            Saved Portfolios &amp; Unlocked Resources
           </h2>
         </div>
         <p className="text-xs text-slate-500 leading-relaxed">
-          Bookmarked unit exemplar notes, offline study materials, and Pearson grading verification checklist.
+          Bookmarked unit exemplar notes, unlocked ₹49 video packages, and Pearson grading verification checklist.
         </p>
+      </div>
+
+      {/* Unlocked ₹49 Video Packages Section if any paid */}
+      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-amber-100 text-amber-900">
+              <Video className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">
+                Unlocked ₹49 Video Masterclasses ({paidIds.length})
+              </h3>
+              <p className="text-[11px] text-slate-500">
+                {paidIds.length > 0 ? 'Lifetime offline access & download licenses active' : 'No videos purchased yet'}
+              </p>
+            </div>
+          </div>
+          <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 uppercase">
+            Paid Pass
+          </span>
+        </div>
+
+        {paidIds.length === 0 ? (
+          <div className="p-4 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center space-y-1.5">
+            <p className="text-xs text-slate-600 font-medium">No videos purchased yet</p>
+            <p className="text-[11px] text-slate-400">
+              Download any video masterclass or lab demo for ₹49 to keep lifetime offline access here.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {unlockedVideos.map(video => {
+              const matchedTxn = transactions.find(t => t.videoId === video.id);
+              return (
+                <div 
+                  key={video.id}
+                  className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-600 text-white font-mono text-[9px] font-bold">
+                        {video.unitCodeTag}
+                      </span>
+                      <span className="text-xs font-bold text-slate-900 truncate">
+                        {video.title}
+                      </span>
+                    </div>
+                    <div className="text-[10px] font-mono text-slate-400 mt-0.5">
+                      Ref: {matchedTxn?.txnId || 'TXN_VERIFIED'} • {video.fileSize} • {video.quality}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => downloadUnlockedVideoPackage(video, matchedTxn)}
+                    className="py-1.5 px-3 bg-[#185a36] hover:bg-[#13492c] text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download (Free)</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Coursework Assignment Verification Tracker */}

@@ -1,12 +1,19 @@
 import React from 'react';
-import { CheckCircle2, FileText, Award, ShieldCheck, HardHat } from 'lucide-react';
+import { CheckCircle2, FileText, Award, ShieldCheck, HardHat, Sliders, ArrowRight, Video } from 'lucide-react';
 
 interface HeroBannerProps {
   onLearnMore?: () => void;
   onExemplarClick?: () => void;
+  onOpenDeck?: () => void;
+  onOpenVideos?: () => void;
 }
 
-export const HeroBanner: React.FC<HeroBannerProps> = ({ onLearnMore, onExemplarClick }) => {
+export const HeroBanner: React.FC<HeroBannerProps> = ({ 
+  onLearnMore, 
+  onExemplarClick, 
+  onOpenDeck,
+  onOpenVideos 
+}) => {
   return (
     <div className="rounded-2xl overflow-hidden border border-slate-200/90 bg-white shadow-xs my-2">
       {/* Top Graphic & Title Banner */}
@@ -100,6 +107,36 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ onLearnMore, onExemplarC
               L3 / HNC / HND
             </span>
           </div>
+        </div>
+
+        {/* Action button into Deck Board & Video Downloads */}
+        <div className="space-y-2">
+          {onOpenVideos && (
+            <button
+              onClick={onOpenVideos}
+              className="w-full py-2.5 px-3.5 bg-gradient-to-r from-amber-600 via-amber-700 to-amber-900 text-white rounded-xl text-xs font-bold flex items-center justify-between cursor-pointer hover:opacity-95 transition-all shadow-xs group"
+            >
+              <div className="flex items-center gap-2">
+                <Video className="w-4 h-4 text-amber-200" />
+                <span>Civil Video Masterclasses &amp; Lab Demos</span>
+                <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full">₹49 only</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-amber-200 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
+
+          {onOpenDeck && (
+            <button
+              onClick={onOpenDeck}
+              className="w-full py-2.5 px-3.5 bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white rounded-xl text-xs font-semibold flex items-center justify-between cursor-pointer hover:opacity-95 transition-all shadow-xs border border-emerald-500/30 group"
+            >
+              <div className="flex items-center gap-2">
+                <Sliders className="w-4 h-4 text-emerald-400 group-hover:rotate-45 transition-transform" />
+                <span>Interactive Structural Deck Board &amp; Simulator</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+            </button>
+          )}
         </div>
       </div>
     </div>

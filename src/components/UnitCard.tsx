@@ -1,6 +1,6 @@
 import React from 'react';
-import { Download, Bookmark, BookmarkCheck } from 'lucide-react';
-import { BTECUnit } from '../types';
+import { Download, Bookmark, BookmarkCheck, Video } from 'lucide-react';
+import { BTECUnit, CivilVideo } from '../types';
 
 interface UnitCardProps {
   unit: BTECUnit;
@@ -8,6 +8,9 @@ interface UnitCardProps {
   onDownload: (unit: BTECUnit) => void;
   isSaved?: boolean;
   onToggleSave?: (unitId: string) => void;
+  onOpenVideoPaywall?: (unit: BTECUnit) => void;
+  hasVideo?: boolean;
+  isVideoPaid?: boolean;
 }
 
 export const UnitCard: React.FC<UnitCardProps> = ({
@@ -15,7 +18,10 @@ export const UnitCard: React.FC<UnitCardProps> = ({
   onPreview,
   onDownload,
   isSaved = false,
-  onToggleSave
+  onToggleSave,
+  onOpenVideoPaywall,
+  hasVideo = true,
+  isVideoPaid = false
 }) => {
   // Pill styling based on badgeType matching the screenshot
   const getBadgeStyle = () => {
@@ -109,22 +115,33 @@ export const UnitCard: React.FC<UnitCardProps> = ({
           <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold tracking-tight border border-slate-200/70">
             {unit.unitCodeTag}
           </span>
-          <span className="text-[11px] text-slate-500 font-medium">
+          <span className="text-[11px] text-slate-500 font-medium hidden sm:inline">
             {unit.exemplarStatus}
           </span>
         </div>
 
-        {/* Action Buttons: Preview & Download */}
-        <div className="flex items-center gap-1.5">
+        {/* Action Buttons: Preview, Video (₹49), Download */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {onOpenVideoPaywall && (
+            <button
+              onClick={() => onOpenVideoPaywall(unit)}
+              className="px-2.5 py-1.5 rounded-md text-[11px] font-bold text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 transition-colors flex items-center gap-1 cursor-pointer"
+              title="Download 1080p Video Masterclass for ₹49"
+            >
+              <Video className="w-3.5 h-3.5 text-amber-700" />
+              <span>{isVideoPaid ? 'Video (Paid)' : 'Video (₹49)'}</span>
+            </button>
+          )}
+
           <button
             onClick={() => onPreview(unit)}
-            className="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
+            className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
           >
             Preview
           </button>
           <button
             onClick={() => onDownload(unit)}
-            className="px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+            className="px-3 sm:px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
           >
             <Download className="w-3.5 h-3.5 stroke-[2.2]" />
             <span>Download</span>

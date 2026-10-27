@@ -1,7 +1,7 @@
 import React from 'react';
-import { FileText, BookOpen, Bookmark, MessageSquare } from 'lucide-react';
+import { FileText, BookOpen, Bookmark, MessageSquare, Sliders, Video } from 'lucide-react';
 
-export type TabType = 'notes' | 'subjects' | 'saved' | 'community';
+export type TabType = 'notes' | 'deck' | 'videos' | 'subjects' | 'saved' | 'community';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -19,6 +19,17 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       id: 'notes' as TabType,
       label: 'Notes',
       icon: FileText
+    },
+    {
+      id: 'deck' as TabType,
+      label: 'Deck',
+      icon: Sliders
+    },
+    {
+      id: 'videos' as TabType,
+      label: 'Videos',
+      icon: Video,
+      subBadge: '₹49'
     },
     {
       id: 'subjects' as TabType,
@@ -39,8 +50,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-3">
-      <div className="max-w-md mx-auto grid grid-cols-4 items-center">
+    <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-1 sm:px-3">
+      <div className="max-w-md mx-auto grid grid-cols-6 items-center">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -53,18 +64,23 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               }`}
             >
               <div className="relative">
-                <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
-                {tab.badge && (
-                  <span className="absolute -top-1 -right-2 bg-emerald-700 text-white text-[9px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-[1.8]'}`} />
+                {tab.badge !== undefined && tab.badge !== null && (
+                  <span className="absolute -top-1 -right-2 bg-emerald-600 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                     {tab.badge}
                   </span>
                 )}
+                {tab.subBadge && (
+                  <span className="absolute -top-1.5 -right-2.5 bg-amber-500 text-slate-950 text-[8px] font-extrabold px-1 rounded-full leading-tight">
+                    {tab.subBadge}
+                  </span>
+                )}
               </div>
-              <span className={`text-[11px] mt-1 font-semibold ${isActive ? 'text-[#185a36]' : 'text-slate-500'}`}>
+              <span className={`text-[10px] mt-0.5 tracking-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {tab.label}
               </span>
               {isActive && (
-                <span className="w-1 h-1 bg-[#185a36] rounded-full mt-0.5" />
+                <span className="w-1 h-1 rounded-full bg-[#185a36] mt-0.5"></span>
               )}
             </button>
           );
