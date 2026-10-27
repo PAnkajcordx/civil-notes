@@ -8,7 +8,7 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve(import.meta.dirname, '.'),
       },
     },
     base: './',
@@ -31,13 +31,6 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
-      rollupOptions: {
-        output: {
-          entryFileNames: 'assets/[name].js',
-          chunkFileNames: 'assets/[name].js',
-          assetFileNames: 'assets/[name].[ext]',
-        },
-      },
     },
   };
 });
