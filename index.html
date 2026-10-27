@@ -36,9 +36,28 @@
           <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">CivilNotes</div>
           <div style="font-size: 11px; font-weight: 700; color: #185a36; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">BTEC Civil Engineering</div>
           <div style="font-size: 12px; color: #64748b; line-height: 1.5;">Loading Unit Portfolios, Distinction Exemplars &amp; Coursework Notes...</div>
+          <div id="boot-error" style="display:none; margin-top:14px; padding:10px; background:#fef2f2; border:1px solid #fecaca; border-radius:10px; font-size:11px; color:#b91c1c; text-align:left; word-break:break-all; font-family:monospace;"></div>
         </div>
       </div>
     </div>
+    <script>
+      window.addEventListener('error', function(e) {
+        var el = document.getElementById('boot-error');
+        if (el) {
+          el.style.display = 'block';
+          var msg = e.message || (e.target && e.target.src ? 'Failed to fetch: ' + e.target.src : String(e));
+          el.textContent = 'App Init Error: ' + msg;
+        }
+      }, true);
+      window.addEventListener('unhandledrejection', function(e) {
+        var el = document.getElementById('boot-error');
+        if (el) {
+          el.style.display = 'block';
+          var reason = e.reason ? (e.reason.message || String(e.reason)) : 'Promise rejected';
+          el.textContent = 'Promise Error: ' + reason;
+        }
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
