@@ -1,4 +1,5 @@
 import { BTECUnit } from '../types';
+import { safeStorage } from './safeStorage';
 
 const PAID_PDFS_KEY = 'civilnotes_paid_pdfs_v1';
 const ALL_ACCESS_PASS_KEY = 'civilnotes_all_access_pass_v1';
@@ -20,17 +21,17 @@ export interface PDFPaymentTransaction {
 
 export function getPaidPdfIds(): string[] {
   try {
-    const raw = localStorage.getItem(PAID_PDFS_KEY);
+    const raw = safeStorage.getItem(PAID_PDFS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch (e) {
-    console.error('Failed to read paid PDFs from localStorage', e);
+    console.error('Failed to read paid PDFs from safeStorage', e);
     return [];
   }
 }
 
 export function hasAllAccessPass(): boolean {
   try {
-    return localStorage.getItem(ALL_ACCESS_PASS_KEY) === 'true';
+    return safeStorage.getItem(ALL_ACCESS_PASS_KEY) === 'true';
   } catch (e) {
     return false;
   }
@@ -50,7 +51,7 @@ export function recordPdfPurchase(
 ): PDFPaymentTransaction {
   if (isAllAccess) {
     try {
-      localStorage.setItem(ALL_ACCESS_PASS_KEY, 'true');
+      safeStorage.setItem(ALL_ACCESS_PASS_KEY, 'true');
     } catch (e) {
       console.error(e);
     }
@@ -59,7 +60,7 @@ export function recordPdfPurchase(
     if (!current.includes(unit.id)) {
       const updated = [...current, unit.id];
       try {
-        localStorage.setItem(PAID_PDFS_KEY, JSON.stringify(updated));
+        safeStorage.setItem(PAID_PDFS_KEY, JSON.stringify(updated));
       } catch (e) {
         console.error(e);
       }
@@ -85,10 +86,10 @@ export function recordPdfPurchase(
   };
 
   try {
-    const rawTxns = localStorage.getItem(PDF_TRANSACTIONS_KEY);
+    const rawTxns = safeStorage.getItem(PDF_TRANSACTIONS_KEY);
     const txns: PDFPaymentTransaction[] = rawTxns ? JSON.parse(rawTxns) : [];
     txns.unshift(txn);
-    localStorage.setItem(PDF_TRANSACTIONS_KEY, JSON.stringify(txns));
+    safeStorage.setItem(PDF_TRANSACTIONS_KEY, JSON.stringify(txns));
   } catch (e) {
     console.error('Failed to save transaction', e);
   }
@@ -98,7 +99,7 @@ export function recordPdfPurchase(
 
 export function getAllPdfTransactions(): PDFPaymentTransaction[] {
   try {
-    const raw = localStorage.getItem(PDF_TRANSACTIONS_KEY);
+    const raw = safeStorage.getItem(PDF_TRANSACTIONS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch (e) {
     return [];

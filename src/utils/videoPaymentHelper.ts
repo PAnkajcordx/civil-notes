@@ -1,14 +1,15 @@
 import { CivilVideo, PaymentTransaction } from '../types';
+import { safeStorage } from './safeStorage';
 
 const PAID_VIDEOS_KEY = 'civilnotes_paid_videos_v1';
 const TRANSACTIONS_KEY = 'civilnotes_transactions_v1';
 
 export function getPaidVideoIds(): string[] {
   try {
-    const raw = localStorage.getItem(PAID_VIDEOS_KEY);
+    const raw = safeStorage.getItem(PAID_VIDEOS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch (e) {
-    console.error('Failed to read paid videos from localStorage', e);
+    console.error('Failed to read paid videos from safeStorage', e);
     return [];
   }
 }
@@ -22,7 +23,7 @@ export function recordVideoPurchase(video: CivilVideo, method: 'upi' | 'card' | 
   const current = getPaidVideoIds();
   if (!current.includes(video.id)) {
     const updated = [...current, video.id];
-    localStorage.setItem(PAID_VIDEOS_KEY, JSON.stringify(updated));
+    safeStorage.setItem(PAID_VIDEOS_KEY, JSON.stringify(updated));
   }
 
   const txn: PaymentTransaction = {
@@ -42,10 +43,10 @@ export function recordVideoPurchase(video: CivilVideo, method: 'upi' | 'card' | 
   };
 
   try {
-    const rawTxns = localStorage.getItem(TRANSACTIONS_KEY);
+    const rawTxns = safeStorage.getItem(TRANSACTIONS_KEY);
     const txns: PaymentTransaction[] = rawTxns ? JSON.parse(rawTxns) : [];
     txns.unshift(txn);
-    localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(txns));
+    safeStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(txns));
   } catch (e) {
     console.error('Failed to save transaction', e);
   }
@@ -55,7 +56,7 @@ export function recordVideoPurchase(video: CivilVideo, method: 'upi' | 'card' | 
 
 export function getAllTransactions(): PaymentTransaction[] {
   try {
-    const raw = localStorage.getItem(TRANSACTIONS_KEY);
+    const raw = safeStorage.getItem(TRANSACTIONS_KEY);
     return raw ? JSON.parse(raw) : [];
   } catch (e) {
     return [];
