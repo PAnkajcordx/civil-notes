@@ -149,7 +149,11 @@ export default function App() {
         <Header
           onSearchClick={() => {
             setActiveTab('notes');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            try {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch {
+              window.scrollTo(0, 0);
+            }
           }}
           cartCount={cartItems.length}
           onCartClick={() => setIsCartOpen(true)}

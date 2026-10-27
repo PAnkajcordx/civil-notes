@@ -24,7 +24,13 @@ export const Header: React.FC<HeaderProps> = ({
         {/* CivilNotes Logo mark matching screenshot top left */}
         <div className="flex items-center gap-2.5">
           <button 
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => {
+              try {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } catch {
+                window.scrollTo(0, 0);
+              }
+            }}
             className="flex items-center gap-2 group text-left cursor-pointer"
             title="CivilNotes - Home"
           >
