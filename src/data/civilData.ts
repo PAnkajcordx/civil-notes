@@ -416,7 +416,7 @@ export const COMMUNITY_DISCUSSIONS: CommunityDiscussion[] = [
   {
     id: 'disc-1',
     author: 'Liam Davies',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80',
+    avatar: 'LD',
     unitTag: 'Unit 1 • L3',
     title: 'Internal Verification feedback on Point Load Shear Force Diagram step-off',
     excerpt: 'My assessor noted that on beam with 45kN point load at 2.5m, the shear force diagram must show vertical jump matching exactly 45kN. Exemplar uploaded helps clarity!',
@@ -428,7 +428,7 @@ export const COMMUNITY_DISCUSSIONS: CommunityDiscussion[] = [
   {
     id: 'disc-2',
     author: 'Aisha Patel',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80',
+    avatar: 'AP',
     unitTag: 'Unit 30 • HNC',
     title: 'Triaxial Test: effective stress cohesion intercept c\' vs zero for NC clay?',
     excerpt: 'In the Distinction criterion D30, when plotting Mohr circle envelope for normally consolidated clay, should we force the tangent through origin or accept 4 kPa scatter?',
@@ -440,7 +440,7 @@ export const COMMUNITY_DISCUSSIONS: CommunityDiscussion[] = [
   {
     id: 'disc-3',
     author: 'Callum Wright',
-    avatar: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&auto=format&fit=crop&q=80',
+    avatar: 'CW',
     unitTag: 'Unit 2 - L3',
     title: 'Two-Peg Test calculation sheet template verified against RICS standards',
     excerpt: 'Shared a clean PDF levelling table that passed IV without queries. Includes intermediate sight reduction column and error check formulas.',
