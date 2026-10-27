@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight, Video, FileCheck, ExternalLink } from 'lucide-react';
+import { Bookmark, Download, Trash2, CheckCircle2, Award, ArrowRight, Video, FileCheck, ExternalLink, Lock, FileText, Zap } from 'lucide-react';
 import { BTECUnit, CivilVideo, PaymentTransaction } from '../types';
 import { CIVIL_VIDEOS } from '../data/videoData';
 import { getPaidVideoIds, getAllTransactions, downloadUnlockedVideoPackage } from '../utils/videoPaymentHelper';
+import { getPaidPdfIds, isPdfPaid, hasAllAccessPass } from '../utils/pdfPaymentHelper';
 
 interface SavedViewProps {
   savedUnits: BTECUnit[];
@@ -11,6 +12,7 @@ interface SavedViewProps {
   onDownloadUnit: (unit: BTECUnit) => void;
   onExploreMore: () => void;
   onOpenVideoPaywall?: (video: CivilVideo) => void;
+  onOpenPdfPaywall?: (unit: BTECUnit) => void;
 }
 
 export const SavedView: React.FC<SavedViewProps> = ({
@@ -19,7 +21,8 @@ export const SavedView: React.FC<SavedViewProps> = ({
   onPreviewUnit,
   onDownloadUnit,
   onExploreMore,
-  onOpenVideoPaywall
+  onOpenVideoPaywall,
+  onOpenPdfPaywall
 }) => {
   // Interactive checklist tracking for students
   const [checklist, setChecklist] = useState<{ [key: string]: boolean }>({
@@ -204,52 +207,79 @@ export const SavedView: React.FC<SavedViewProps> = ({
           </div>
         ) : (
           <div className="space-y-3">
-            {savedUnits.map((unit) => (
-              <div
-                key={unit.id}
-                className="p-4 bg-white rounded-xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-700">
-                      {unit.unitCodeTag}
-                    </span>
-                    <span className="text-[11px] font-medium text-emerald-700">
-                      {unit.exemplarStatus}
-                    </span>
-                  </div>
-                  <h4 className="text-sm font-bold text-slate-900 leading-snug">
-                    {unit.title}
-                  </h4>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-1">
-                    {unit.description}
-                  </p>
-                </div>
+            {savedUnits.map((unit) => {
+              const isPaid = isPdfPaid(unit.id);
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => onPreviewUnit(unit)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
-                  >
-                    Preview
-                  </button>
-                  <button
-                    onClick={() => onDownloadUnit(unit)}
-                    className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    <span>Download</span>
-                  </button>
-                  <button
-                    onClick={() => onRemoveSaved(unit.id)}
-                    className="p-2 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
-                    title="Remove bookmark"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+              return (
+                <div
+                  key={unit.id}
+                  className="p-4 bg-white rounded-xl border border-slate-200 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold text-slate-700">
+                        {unit.unitCodeTag}
+                      </span>
+                      {isPaid ? (
+                        <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          Full PDF Unlocked
+                        </span>
+                      ) : (
+                        <>
+                          <span className="text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                            PDF: ₹{unit.priceINR || 49}
+                          </span>
+                          <span className="text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                            2 Free Demo Pages
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <h4 className="text-sm font-bold text-slate-900 leading-snug">
+                      {unit.title}
+                    </h4>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-1">
+                      {unit.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                    <button
+                      onClick={() => onPreviewUnit(unit)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+                      title="Preview 2 Free Demo Pages"
+                    >
+                      Demo Preview
+                    </button>
+                    {isPaid ? (
+                      <button
+                        onClick={() => onDownloadUnit(unit)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Download</span>
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onOpenPdfPaywall ? onOpenPdfPaywall(unit) : onDownloadUnit(unit)}
+                        className="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                      >
+                        <Lock className="w-3 h-3 text-emerald-300" />
+                        <span>Unlock (₹{unit.priceINR || 49})</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => onRemoveSaved(unit.id)}
+                      className="p-2 text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                      title="Remove bookmark"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

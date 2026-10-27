@@ -12,7 +12,8 @@ import { CommunitySection } from './components/CommunitySection';
 import { ToolkitsSection } from './components/ToolkitsSection';
 import { Footer } from './components/Footer';
 import { BottomNav, TabType } from './components/BottomNav';
-import { DocumentPreviewModal } from './components/DocumentPreviewModal';
+import { PDFViewerModal } from './components/PDFViewerModal';
+import { PDFPaywallModal } from './components/PDFPaywallModal';
 import { ToolkitModal } from './components/ToolkitModal';
 import { CartDrawer } from './components/CartDrawer';
 import { ProfileModal } from './components/ProfileModal';
@@ -23,12 +24,14 @@ import { DeckBoard } from './components/DeckBoard';
 import { VideoLibrarySection } from './components/VideoLibrarySection';
 import { VideoPaywallModal } from './components/VideoPaywallModal';
 import { BackgroundCustomizer, BackgroundCanvas, BackgroundTheme } from './components/BackgroundCustomizer';
+import { DashboardAutoResponder } from './components/DashboardAutoResponder';
 import { BTEC_UNITS } from './data/civilData';
 import { CIVIL_VIDEOS } from './data/videoData';
 import { BTECUnit, CourseworkToolkit, PYQResource, CivilVideo } from './types';
 import { downloadUnitPortfolio } from './utils/downloadHelper';
 import { isVideoPaid } from './utils/videoPaymentHelper';
-import { CheckCircle2, Search, Smartphone, Monitor, Sliders, Video } from 'lucide-react';
+import { isPdfPaid, downloadUnlockedPDFDocument } from './utils/pdfPaymentHelper';
+import { CheckCircle2, Search, Smartphone, Monitor, Sliders, Video, Bot, ArrowRight, X, Lock, FileText } from 'lucide-react';
 
 const CATEGORIES = [
   'All Units',
@@ -53,9 +56,14 @@ export default function App() {
   const [cartItems, setCartItems] = useState<(CourseworkToolkit | PYQResource)[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAutoResponderOpen, setIsAutoResponderOpen] = useState(false);
   
   // Video Paywall Modal state (Universal ₹49 paywall for any video)
   const [activePaywallVideo, setActivePaywallVideo] = useState<CivilVideo | null>(null);
+
+  // PDF Paywall Modal state (Universal payable PDF with 2 demo pages)
+  const [activePdfPaywallUnit, setActivePdfPaywallUnit] = useState<BTECUnit | null>(null);
+  const [pdfPaidVersion, setPdfPaidVersion] = useState<number>(0);
 
   // Mobile device frame preview toggle
   const [isMobileFrame, setIsMobileFrame] = useState(true);
@@ -85,10 +93,15 @@ export default function App() {
     });
   };
 
-  // Trigger unit download
+  // Trigger unit download or paywall
   const handleDownloadUnit = (unit: BTECUnit) => {
-    downloadUnitPortfolio(unit);
-    showToast(`Downloaded ${unit.unitCodeTag} Distinction Pack!`);
+    if (isPdfPaid(unit.id)) {
+      downloadUnlockedPDFDocument(unit);
+      showToast(`Downloaded full ${unit.unitCodeTag} Distinction Pack!`);
+    } else {
+      setActivePdfPaywallUnit(unit);
+      showToast(`All PDFs payable. Unlock ${unit.unitCodeTag} for ₹${unit.priceINR || 49} or view 2 free demo pages!`);
+    }
   };
 
   // Trigger ₹49 Video Paywall for a unit
@@ -209,6 +222,10 @@ export default function App() {
             setActiveTab('videos');
             showToast('Showing ₹49 Video Masterclasses');
           }}
+          onAutoResponderClick={() => {
+            setIsAutoResponderOpen(true);
+            showToast('Dashboard Auto-Responder Active');
+          }}
         />
 
         {/* Viewport Content */}
@@ -223,6 +240,52 @@ export default function App() {
                 selectedProgramme={selectedProgramme}
                 onSelectProgramme={setSelectedProgramme}
               />
+
+              {/* Dynamic Auto-Responding to Dashboard Status Strip */}
+              <div className="mb-3 p-2.5 rounded-xl bg-gradient-to-r from-slate-900 via-slate-900/95 to-emerald-950 border border-emerald-500/35 text-white flex items-center justify-between gap-2.5 shadow-sm">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="relative shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+                      <Bot className="w-4 h-4" />
+                    </div>
+                    <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">
+                        Automatically Responds to Dashboard
+                      </span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                        Active
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-300 truncate">
+                      Real-time reactions to beam parameters, BTEC grading &amp; {savedUnitIds.length} portfolios
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={() => setIsAutoResponderOpen(true)}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+                  >
+                    <span>Auto-Ask</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('deck');
+                      showToast('Opened Deck Board');
+                    }}
+                    className="hidden xs:flex px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[10px] font-semibold transition-all cursor-pointer"
+                  >
+                    Deck Board
+                  </button>
+                </div>
+              </div>
 
               {/* Hero Banner Section */}
               <HeroBanner
@@ -303,6 +366,7 @@ export default function App() {
                       v.title.toLowerCase().includes(`unit ${unit.unitNumber}`)
                     );
                     const isPaid = matchingVideo ? isVideoPaid(matchingVideo.id) : false;
+                    const isPdfUnlocked = isPdfPaid(unit.id);
 
                     return (
                       <UnitCard
@@ -314,6 +378,8 @@ export default function App() {
                         onToggleSave={handleToggleSave}
                         onOpenVideoPaywall={() => handleOpenVideoPaywallForUnit(unit)}
                         isVideoPaid={isPaid}
+                        isPdfPaid={isPdfUnlocked}
+                        onOpenPdfPaywall={(u) => setActivePdfPaywallUnit(u)}
                       />
                     );
                   })
@@ -388,6 +454,7 @@ export default function App() {
               onDownloadUnit={handleDownloadUnit}
               onExploreMore={() => setActiveTab('notes')}
               onOpenVideoPaywall={(vid) => setActivePaywallVideo(vid)}
+              onOpenPdfPaywall={(u) => setActivePdfPaywallUnit(u)}
             />
           )}
 
@@ -434,12 +501,23 @@ export default function App() {
         </button>
       </div>
 
-      {/* Document Preview Modal */}
-      <DocumentPreviewModal
+      {/* Interactive PDF Document Viewer with Free 2-Page Demo Mode & Paywall */}
+      <PDFViewerModal
         unit={previewUnit}
         onClose={() => setPreviewUnit(null)}
-        onDownload={handleDownloadUnit}
+        onOpenPdfPaywall={(u) => setActivePdfPaywallUnit(u)}
         onOpenVideoPaywall={(vid) => setActivePaywallVideo(vid)}
+      />
+
+      {/* Dedicated PDF Paywall Modal (UPI / QR / Card simulation with instant unlock) */}
+      <PDFPaywallModal
+        unit={activePdfPaywallUnit}
+        onClose={() => setActivePdfPaywallUnit(null)}
+        onOpenDemo={(u) => setPreviewUnit(u)}
+        onPaymentSuccess={(u, txn) => {
+          setPdfPaidVersion(v => v + 1);
+          showToast(`₹${txn.amountINR} Payment Confirmed! ${u.unitCodeTag} Full PDF Unlocked.`);
+        }}
       />
 
       {/* Universal ₹49 Video Paywall & Download Modal */}
@@ -473,6 +551,39 @@ export default function App() {
         isOpen={isProfileOpen}
         onClose={() => setIsProfileOpen(false)}
       />
+
+      {/* Dedicated Dashboard Auto-Responder Modal */}
+      {isAutoResponderOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl bg-slate-900 border border-slate-700 shadow-2xl">
+            {/* Header close bar */}
+            <div className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 bg-slate-900/95 backdrop-blur-md border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></div>
+                <span className="text-xs font-bold text-white uppercase tracking-wider">
+                  Live Dashboard Auto-Responder
+                </span>
+              </div>
+              <button
+                onClick={() => setIsAutoResponderOpen(false)}
+                className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4">
+              <DashboardAutoResponder
+                savedUnitsCount={savedUnitIds.length}
+                latestEventTrigger="Inspecting Auto-Responder from Hub"
+                onApplyFix={(param, val) => {
+                  showToast(`Applied parameter update: ${param}`);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

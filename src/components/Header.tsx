@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, ShoppingCart, User, Smartphone, Monitor, Video } from 'lucide-react';
+import { Search, ShoppingCart, User, Smartphone, Monitor, Video, Bot } from 'lucide-react';
 
 interface HeaderProps {
   onSearchClick: () => void;
@@ -9,6 +9,7 @@ interface HeaderProps {
   isMobileFrame: boolean;
   onToggleFrame: () => void;
   onVideosClick?: () => void;
+  onAutoResponderClick?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,7 +19,8 @@ export const Header: React.FC<HeaderProps> = ({
   onProfileClick,
   isMobileFrame,
   onToggleFrame,
-  onVideosClick
+  onVideosClick,
+  onAutoResponderClick
 }) => {
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200/90 transition-all">
@@ -58,6 +60,24 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Right side utility icons */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {/* Quick Auto-Responder Trigger with live indicator */}
+          {onAutoResponderClick && (
+            <button
+              onClick={onAutoResponderClick}
+              className="relative flex items-center gap-1.5 px-2 sm:px-2.5 py-1 text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300/80 rounded-lg transition-colors cursor-pointer"
+              title="Dashboard Auto-Responder: Real-time feedback & checks"
+            >
+              <div className="relative">
+                <Bot className="w-3.5 h-3.5 text-emerald-700" />
+                <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+              </div>
+              <span className="hidden xs:inline text-[11px] font-semibold text-emerald-800">Auto-Responder</span>
+            </button>
+          )}
+
           {/* Quick Videos ₹49 shortcut */}
           {onVideosClick && (
             <button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, Bookmark, BookmarkCheck, Video } from 'lucide-react';
+import { Download, Bookmark, BookmarkCheck, Video, Lock, FileText, CheckCircle2 } from 'lucide-react';
 import { BTECUnit, CivilVideo } from '../types';
 
 interface UnitCardProps {
@@ -11,6 +11,8 @@ interface UnitCardProps {
   onOpenVideoPaywall?: (unit: BTECUnit) => void;
   hasVideo?: boolean;
   isVideoPaid?: boolean;
+  isPdfPaid?: boolean;
+  onOpenPdfPaywall?: (unit: BTECUnit) => void;
 }
 
 export const UnitCard: React.FC<UnitCardProps> = ({
@@ -21,7 +23,9 @@ export const UnitCard: React.FC<UnitCardProps> = ({
   onToggleSave,
   onOpenVideoPaywall,
   hasVideo = true,
-  isVideoPaid = false
+  isVideoPaid = false,
+  isPdfPaid = false,
+  onOpenPdfPaywall
 }) => {
   // Pill styling based on badgeType matching the screenshot
   const getBadgeStyle = () => {
@@ -99,9 +103,29 @@ export const UnitCard: React.FC<UnitCardProps> = ({
       </div>
 
       {/* Title */}
-      <h3 className="text-[14px] sm:text-[15px] font-bold text-slate-900 leading-snug mb-1.5">
+      <h3 className="text-[14px] sm:text-[15px] font-bold text-slate-900 leading-snug mb-1">
         {unit.title}
       </h3>
+
+      {/* Pricing & Demo Availability Badge */}
+      <div className="flex items-center gap-2 mb-2 flex-wrap">
+        {isPdfPaid ? (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-bold">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>Full PDF Unlocked ({unit.totalPages || 6} Pages)</span>
+          </span>
+        ) : (
+          <>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-bold">
+              <FileText className="w-3 h-3 text-amber-700" />
+              <span>PDF: ₹{unit.priceINR || 49}</span>
+            </span>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-blue-800 border border-blue-200 text-[11px] font-medium">
+              <span>2 Free Demo Pages</span>
+            </span>
+          </>
+        )}
+      </div>
 
       {/* Description */}
       <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-3.5">
@@ -120,7 +144,7 @@ export const UnitCard: React.FC<UnitCardProps> = ({
           </span>
         </div>
 
-        {/* Action Buttons: Preview, Video (₹49), Download */}
+        {/* Action Buttons: Preview (Demo), Video (₹49), Download / Unlock */}
         <div className="flex items-center gap-1.5 flex-wrap">
           {onOpenVideoPaywall && (
             <button
@@ -135,17 +159,31 @@ export const UnitCard: React.FC<UnitCardProps> = ({
 
           <button
             onClick={() => onPreview(unit)}
-            className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer"
+            className="px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 hover:text-slate-900 transition-colors cursor-pointer flex items-center gap-1"
+            title="Preview with 2 Free Demo Pages"
           >
-            Preview
+            <span>Demo Preview</span>
           </button>
-          <button
-            onClick={() => onDownload(unit)}
-            className="px-3 sm:px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
-          >
-            <Download className="w-3.5 h-3.5 stroke-[2.2]" />
-            <span>Download</span>
-          </button>
+
+          {isPdfPaid ? (
+            <button
+              onClick={() => onDownload(unit)}
+              className="px-3 sm:px-3.5 py-1.5 rounded-md text-xs font-semibold text-white bg-emerald-700 hover:bg-emerald-800 transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              title="Download Unlocked PDF"
+            >
+              <Download className="w-3.5 h-3.5 stroke-[2.2]" />
+              <span>Download</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => onOpenPdfPaywall ? onOpenPdfPaywall(unit) : onDownload(unit)}
+              className="px-3 sm:px-3.5 py-1.5 rounded-md text-xs font-bold text-white bg-[#185a36] hover:bg-[#13492c] transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              title="Unlock Complete PDF for ₹49"
+            >
+              <Lock className="w-3 h-3 text-emerald-300 stroke-[2.5]" />
+              <span>Unlock (₹{unit.priceINR || 49})</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

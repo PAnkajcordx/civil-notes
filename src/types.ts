@@ -24,6 +24,9 @@ export interface BTECUnit {
     sampleCalculations: string[];
     standardCodes: string[];
   };
+  priceINR?: number; // e.g. 49
+  totalPages?: number; // e.g. 6
+  demoPagesCount?: number; // e.g. 2
 }
 
 export interface PYQResource {

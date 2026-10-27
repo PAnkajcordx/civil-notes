@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { BTEC_UNITS } from '../data/civilData';
 import { BTECUnit } from '../types';
+import { DashboardAutoResponder } from './DashboardAutoResponder';
 import { 
   Layers, 
   Calculator, 
@@ -13,7 +14,8 @@ import {
   MoveRight, 
   Sparkles,
   BarChart3,
-  HardHat
+  HardHat,
+  Bot
 } from 'lucide-react';
 
 interface DeckBoardProps {
@@ -34,6 +36,7 @@ interface KanbanTask {
 
 export const DeckBoard: React.FC<DeckBoardProps> = ({ onPreviewUnit, onDownloadUnit }) => {
   const [activeDeckTab, setActiveDeckTab] = useState<DeckTab>('simulator');
+  const [recentEvent, setRecentEvent] = useState<string | null>(null);
 
   // Interactive Structural Deck Beam Simulator State
   const [spanLength, setSpanLength] = useState<number>(8); // meters
@@ -134,7 +137,9 @@ export const DeckBoard: React.FC<DeckBoardProps> = ({ onPreviewUnit, onDownloadU
         if (task.id === taskId) {
           const currentIndex = statusFlow.indexOf(task.status);
           const nextIndex = (currentIndex + 1) % statusFlow.length;
-          return { ...task, status: statusFlow[nextIndex] };
+          const nextStatus = statusFlow[nextIndex];
+          setRecentEvent(`Coursework Task "${task.title.slice(0, 32)}..." advanced to ${nextStatus.toUpperCase()}`);
+          return { ...task, status: nextStatus };
         }
         return task;
       })
@@ -155,7 +160,7 @@ export const DeckBoard: React.FC<DeckBoardProps> = ({ onPreviewUnit, onDownloadU
               Responsive Deck Board
             </h1>
             <p className="text-xs text-slate-300 mt-1 max-w-xl leading-relaxed">
-              Real-time structural deck mechanics simulator, BTEC coursework kanban cards, and unit portfolio deck inspector.
+              Real-time structural deck mechanics simulator, BTEC coursework kanban cards, and unit portfolio deck inspector with live automated dashboard response.
             </p>
           </div>
 
@@ -197,6 +202,27 @@ export const DeckBoard: React.FC<DeckBoardProps> = ({ onPreviewUnit, onDownloadU
           </div>
         </div>
       </div>
+
+      {/* AUTOMATICALLY RESPONDS TO YOUR DASHBOARD COMPONENT */}
+      <DashboardAutoResponder
+        currentSpan={spanLength}
+        currentUDL={deadLoadUDL}
+        currentPointLoad={pointLoadP}
+        currentDeckType={deckType}
+        isDeflectionPass={isDeflectionPass}
+        activeTasksCount={tasks.filter(t => t.status !== 'done').length}
+        completedTasksCount={tasks.filter(t => t.status === 'done').length}
+        latestEventTrigger={recentEvent}
+        onApplyFix={(param, value) => {
+          if (param === 'deckType') {
+            setDeckType(value);
+            setRecentEvent(`Deck type auto-adjusted to Prestressed Concrete T-Beam`);
+          } else if (param === 'span') {
+            setSpanLength(value);
+            setRecentEvent(`Span auto-reduced to ${value}m to satisfy SLS limits`);
+          }
+        }}
+      />
 
       {/* VIEW 1: STRUCTURAL DECK & SLAB SIMULATOR */}
       {activeDeckTab === 'simulator' && (

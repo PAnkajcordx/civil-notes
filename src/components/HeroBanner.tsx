@@ -49,6 +49,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white leading-tight">
             BTEC Civil Engineering Notes &amp; Unit Portfolios
           </h1>
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            <span className="px-2 py-0.5 rounded-md bg-amber-400/25 text-amber-200 border border-amber-400/40 text-[10px] font-bold">
+              All PDFs Payable (₹49)
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-emerald-400/25 text-emerald-300 border border-emerald-400/40 text-[10px] font-semibold">
+              2 Free Demo Pages
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-white/15 text-slate-200 border border-white/20 text-[10px]">
+              D* Verified Calculations
+            </span>
+          </div>
         </div>
       </div>
 
