@@ -11,6 +11,7 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    base: './',
     server: {
       host: '0.0.0.0',
       port: 3000,
@@ -27,6 +28,16 @@ export default defineConfig(() => {
       port: 3000,
       cors: true,
       allowedHosts: true as const,
+    },
+    build: {
+      outDir: 'dist',
+      rollupOptions: {
+        output: {
+          entryFileNames: 'assets/[name].js',
+          chunkFileNames: 'assets/[name].js',
+          assetFileNames: 'assets/[name].[ext]',
+        },
+      },
     },
   };
 });
