@@ -1,0 +1,214 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_001",
+      "email": "admin@civilnotes.com",
+      "passwordHash": "$2b$10$wz6EGP.pErknRqqm//9/QeSmMdJUvGEF.zZNQdJ00Nm1BUE5aC/aK",
+      "name": "CivilNotes Administrator",
+      "role": "admin",
+      "createdAt": "2026-10-27T09:20:02.825Z"
+    },
+    {
+      "id": "usr_student_001",
+      "email": "student@civilnotes.com",
+      "passwordHash": "$2b$10$JfhZDX3RCcjacvFf9GoHleJqm1Owc5GUeUE2S9UFsMZ9W5fcYsN.u",
+      "name": "Pankaj Kumar (Student)",
+      "role": "customer",
+      "createdAt": "2026-10-27T09:20:02.825Z"
+    }
+  ],
+  "products": [
+    {
+      "serialNumber": 1,
+      "id": "prod_civil_complete_notes",
+      "title": "Civil Engineering Complete Notes",
+      "subject": "Structural & Infrastructure Engineering",
+      "category": "Complete Notes & Handbooks",
+      "description": "Comprehensive 480-page reference handbook covering structural design, Eurocodes, materials, fluid mechanics, and foundation analysis.",
+      "pageCount": 480,
+      "originalPriceINR": 299,
+      "discountPriceINR": 200,
+      "finalPriceINR": 99,
+      "storageKey": "civil_engineering_complete_notes.pdf",
+      "coverGradient": "from-blue-600 via-indigo-700 to-slate-900",
+      "fileSizeBytes": 6291456,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 2,
+      "id": "prod_surveying_notes",
+      "title": "Surveying Notes & Fieldwork Toolkit",
+      "subject": "Land Surveying & Geomatics",
+      "category": "Site & Surveying",
+      "description": "Total station protocols, leveling traverse error distribution, GNSS RTK setup guidelines, and photogrammetry numerical guides.",
+      "pageCount": 220,
+      "originalPriceINR": 349,
+      "discountPriceINR": 200,
+      "finalPriceINR": 149,
+      "storageKey": "surveying_notes.pdf",
+      "coverGradient": "from-emerald-600 via-teal-700 to-slate-900",
+      "fileSizeBytes": 3565158.4000000004,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 3,
+      "id": "prod_building_materials",
+      "title": "Building Materials & Concrete Technology",
+      "subject": "Materials Science & Testing",
+      "category": "Construction Tech",
+      "description": "Concrete mix design (IS 10262 / BS EN 206), hydration mechanics, cementitious admixtures, non-destructive testing (NDT), and masonry.",
+      "pageCount": 160,
+      "originalPriceINR": 199,
+      "discountPriceINR": 120,
+      "finalPriceINR": 79,
+      "storageKey": "building_materials.pdf",
+      "coverGradient": "from-amber-600 via-orange-700 to-slate-900",
+      "fileSizeBytes": 2936012.8,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 4,
+      "id": "prod_estimation_costing",
+      "title": "Estimation, Costing & Valuation Handbook",
+      "subject": "Quantity Surveying & Commercials",
+      "category": "Management & Quantities",
+      "description": "Bar bending schedules (BBS), item-rate analysis, quantity takeoff formulas, CPWD/FIDIC contracts, and commercial tender bidding.",
+      "pageCount": 240,
+      "originalPriceINR": 299,
+      "discountPriceINR": 170,
+      "finalPriceINR": 129,
+      "storageKey": "estimation_and_costing.pdf",
+      "coverGradient": "from-rose-600 via-pink-700 to-slate-900",
+      "fileSizeBytes": 3774873.5999999996,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 5,
+      "id": "prod_construction_planning",
+      "title": "Construction Planning, CPM & Management",
+      "subject": "Site Management & Scheduling",
+      "category": "Project Management",
+      "description": "Critical Path Method (CPM), PERT diagrams, Primavera P6/MS Project workflow, Earned Value Management (EVM), and site health & safety.",
+      "pageCount": 310,
+      "originalPriceINR": 449,
+      "discountPriceINR": 250,
+      "finalPriceINR": 199,
+      "storageKey": "construction_planning.pdf",
+      "coverGradient": "from-purple-600 via-indigo-800 to-slate-900",
+      "fileSizeBytes": 4508876.8,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 6,
+      "id": "prod_unit_1_mechanics",
+      "title": "Pearson BTEC Unit 1: Construction Principles",
+      "subject": "Structural Mechanics & Materials",
+      "category": "Construction Principles",
+      "description": "Full BTEC Level 3 Distinction Exemplar: Bending moments, shear force diagrams, pin-jointed truss method of joints & sections, thermal U-values.",
+      "pageCount": 88,
+      "originalPriceINR": 149,
+      "discountPriceINR": 100,
+      "finalPriceINR": 49,
+      "storageKey": "btec_unit_1_mechanics.pdf",
+      "coverGradient": "from-emerald-700 via-teal-800 to-slate-900",
+      "fileSizeBytes": 2181038.08,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    },
+    {
+      "serialNumber": 7,
+      "id": "prod_unit_30_geotechnics",
+      "title": "Pearson BTEC Unit 30: Advanced Geotechnics",
+      "subject": "Soil Mechanics & Foundations",
+      "category": "Geotechnics & Math",
+      "description": "Full BTEC HNC/HND Distinction Exemplar: Mohr-Coulomb failure criteria, Terzaghi bearing capacity, Rankine earth pressure, pad and pile design.",
+      "pageCount": 114,
+      "originalPriceINR": 149,
+      "discountPriceINR": 100,
+      "finalPriceINR": 49,
+      "storageKey": "btec_unit_30_geotechnics.pdf",
+      "coverGradient": "from-cyan-700 via-blue-800 to-slate-900",
+      "fileSizeBytes": 2453667.84,
+      "isPublished": true,
+      "createdAt": "2026-10-27T09:20:02.826Z",
+      "updatedAt": "2026-10-27T09:20:02.826Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "ord_1793093015607_242gy",
+      "orderNumber": "CN-015607-679",
+      "userId": "usr_student_001",
+      "userEmail": "student@civilnotes.com",
+      "productId": "prod_civil_complete_notes",
+      "productTitle": "Civil Engineering Complete Notes",
+      "amountPaise": 9900,
+      "amountINR": 99,
+      "currency": "INR",
+      "status": "paid",
+      "razorpayOrderId": "order_1793093015607_4rz2hj",
+      "createdAt": "2026-10-27T09:23:35.607Z",
+      "razorpayPaymentId": "pay_test_1793093015612",
+      "razorpaySignature": "sig_test_1793093015612_pay_test_1793093015612",
+      "paymentMethod": "UPI",
+      "paidAt": "2026-10-27T09:23:35.616Z"
+    }
+  ],
+  "entitlements": [
+    {
+      "id": "ent_1793093015617_0ci6d",
+      "userId": "usr_student_001",
+      "userEmail": "student@civilnotes.com",
+      "productId": "prod_civil_complete_notes",
+      "orderId": "ord_1793093015607_242gy",
+      "status": "active",
+      "grantedAt": "2026-10-27T09:23:35.617Z"
+    }
+  ],
+  "webhookLogs": [],
+  "auditLogs": [
+    {
+      "id": "audit_1793093015607_cvki",
+      "timestamp": "2026-10-27T09:23:35.607Z",
+      "action": "ORDER_CREATED",
+      "actorEmail": "student@civilnotes.com",
+      "targetId": "ord_1793093015607_242gy",
+      "details": "Created order CN-015607-679 for product Civil Engineering Complete Notes (₹99)"
+    },
+    {
+      "id": "audit_1793093015617_r1lw",
+      "timestamp": "2026-10-27T09:23:35.617Z",
+      "action": "PAYMENT_VERIFIED",
+      "actorEmail": "student@civilnotes.com",
+      "targetId": "ord_1793093015607_242gy",
+      "details": "Verified payment pay_test_1793093015612 for order CN-015607-679. Entitlement ent_1793093015617_0ci6d granted."
+    },
+    {
+      "id": "audit_1793093015627_rlz7",
+      "timestamp": "2026-10-27T09:23:35.627Z",
+      "action": "PDF_VIEWED",
+      "actorEmail": "student@civilnotes.com",
+      "targetId": "prod_civil_complete_notes",
+      "details": "Viewed PDF document: Civil Engineering Complete Notes"
+    },
+    {
+      "id": "audit_1793093037854_wtzm",
+      "timestamp": "2026-10-27T09:23:57.854Z",
+      "action": "UNAUTHORIZED_PDF_ACCESS_BLOCKED",
+      "actorEmail": "student@civilnotes.com",
+      "targetId": "prod_surveying_notes",
+      "details": "Attempted to view unpurchased PDF Surveying Notes & Fieldwork Toolkit (prod_surveying_notes)"
+    }
+  ]
+}

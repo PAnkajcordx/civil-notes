@@ -1,58 +1,62 @@
 import React from 'react';
-import { FileText, BookOpen, Bookmark, MessageSquare, Sliders, Video } from 'lucide-react';
+import { FileText, DollarSign, Bookmark, Sliders, Video, ShoppingBag } from 'lucide-react';
 
-export type TabType = 'notes' | 'deck' | 'videos' | 'subjects' | 'saved' | 'community';
+export type TabType = 'notes' | 'pricing' | 'purchases' | 'deck' | 'videos' | 'saved';
 
 interface BottomNavProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   savedCount?: number;
+  purchasedCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onTabChange,
-  savedCount = 0
+  savedCount = 0,
+  purchasedCount = 0,
 }) => {
   const tabs = [
     {
       id: 'notes' as TabType,
       label: 'Notes',
-      icon: FileText
+      icon: FileText,
+    },
+    {
+      id: 'pricing' as TabType,
+      label: 'PDF Store',
+      icon: DollarSign,
+      subBadge: 'Table',
+    },
+    {
+      id: 'purchases' as TabType,
+      label: 'My PDFs',
+      icon: ShoppingBag,
+      badge: purchasedCount > 0 ? purchasedCount : null,
     },
     {
       id: 'deck' as TabType,
       label: 'Deck',
-      icon: Sliders
+      icon: Sliders,
     },
     {
       id: 'videos' as TabType,
       label: 'Videos',
       icon: Video,
-      subBadge: '₹49'
-    },
-    {
-      id: 'subjects' as TabType,
-      label: 'Subjects',
-      icon: BookOpen
+      subBadge: '₹49',
     },
     {
       id: 'saved' as TabType,
       label: 'Saved',
       icon: Bookmark,
-      badge: savedCount > 0 ? savedCount : null
+      badge: savedCount > 0 ? savedCount : null,
     },
-    {
-      id: 'community' as TabType,
-      label: 'Community',
-      icon: MessageSquare
-    }
   ];
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-1.5 px-1 sm:px-3">
       <div className="max-w-md mx-auto grid grid-cols-6 items-center">
-        {tabs.map((tab) => {
+        {tabs.map(tab => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
           return (
@@ -79,9 +83,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               <span className={`text-[10px] mt-0.5 tracking-tight ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {tab.label}
               </span>
-              {isActive && (
-                <span className="w-1 h-1 rounded-full bg-[#185a36] mt-0.5"></span>
-              )}
+              {isActive && <span className="w-1 h-1 rounded-full bg-[#185a36] mt-0.5"></span>}
             </button>
           );
         })}

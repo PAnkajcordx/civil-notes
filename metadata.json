@@ -1,8 +1,8 @@
 {
-  "name": "CivilNotes - BTEC Civil Engineering Notes & Portfolios",
-  "description": "Specialist Pearson BTEC Level 3, HNC & HND Civil Engineering resource portal with unit portfolios, distinction exemplars, and coursework toolkits.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
+  "name": "CivilNotes - Secure Paid PDF Selling Platform",
+  "description": "Secure civil engineering coursework and PDF selling platform with Razorpay payment gateway, complete responsive payment table, private PDF delivery, student accounts, and admin dashboard.",
+  "permissions": [],
+  "capabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]
 }
